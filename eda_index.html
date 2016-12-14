@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <script src='scripts/jquery.min.js'></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <style type="text/css">
+      div.bar {
+        display: inline-block;
+        width: 20px;
+        height: 75px;   /* We'll override this later */
+        background-color: teal;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <p>Hello!</p>
+    <script type="text/javascript">
+      var dataset = [5, 10, 15, 20];
+      d3.select("body").selectAll("div") // Why does this return from index 1???
+        .data(dataset)
+        .enter()
+        .append("div")
+        .attr("class", "bar")
+        .style("color", "red")
+        .style("height", function(d) {
+          return d + "px";
+        });
+    
+    
+    
+    
+    </script>
+    
+    
+  </body>
+  
+</html>
