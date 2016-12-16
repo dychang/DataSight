@@ -27,6 +27,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 	$scope.create_graph = function(chartType) {
 
+		d3.select("svg").remove();
+
 		if (chartType == 'Scatter') {
 
 	        $scope.margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -160,7 +162,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		}
 
 		else if (chartType == 'Pie') {
-			
+
 		}
 
 
