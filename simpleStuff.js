@@ -25,77 +25,145 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		$("#confirmModal").modal("toggle");
 	}
 
-	$scope.run_Scatter = function() {
+	$scope.create_graph = function(chartType) {
 
-        // Set the dimensions of the canvas / graph
-        $scope.margin = {top: 30, right: 20, bottom: 30, left: 50},
-            $scope.width = 600 - $scope.margin.left - $scope.margin.right,
-            $scope.height = 270 - $scope.margin.top - $scope.margin.bottom;
+		if (chartType == 'Scatter') {
 
-        // Parse the date / time
-        $scope.parseDate = d3.time.format("%d-%b-%y").parse;
+	        $scope.margin = {top: 20, right: 20, bottom: 30, left: 40},
+			    $scope.width = 960 - $scope.margin.left - $scope.margin.right,
+			    $scope.height = 500 - $scope.margin.top - $scope.margin.bottom;
 
-        // Set the ranges
-        $scope.x = d3.time.scale().range([0, $scope.width]);
-        $scope.y = d3.scale.linear().range([$scope.height, 0]);
+			/* 
+			 * value accessor - returns the value to encode for a given data object.
+			 * scale - maps value to a visual display encoding, such as a pixel position.
+			 * map function - maps from data value to display value
+			 * axis - sets up axis
+			 */ 
 
-        // Define the axes
-        $scope.xAxis = d3.svg.axis().scale($scope.x)
-            .orient("bottom").ticks(5);
+			// setup x 
+			$scope.xValue = function(d) { return d.Calories;}, // data -> value
+			    $scope.xScale = d3.scale.linear().range([0, $scope.width]), // value -> display
+			    $scope.xMap = function(d) { return $scope.xScale($scope.xValue(d));}, // data -> display
+			    $scope.xAxis = d3.svg.axis().scale($scope.xScale).orient("bottom");
 
-        $scope.yAxis = d3.svg.axis().scale($scope.y)
-            .orient("left").ticks(5);
+			// setup y
+			$scope.yValue = function(d) { return d["Protein (g)"];}, // data -> value
+			    $scope.yScale = d3.scale.linear().range([$scope.height, 0]), // value -> display
+			    $scope.yMap = function(d) { return $scope.yScale($scope.yValue(d));}, // data -> display
+			    $scope.yAxis = d3.svg.axis().scale($scope.yScale).orient("left");
 
-        // Define the line
-        $scope.valueline = d3.svg.line()
-            .x(function(d) { return $scope.x(d.date); })
-            .y(function(d) { return $scope.y(d.close); });
-            
-        // Adds the svg canvas
-        $scope.svg = d3.select("body")
-            .append("svg")
-                .attr("width", $scope.width + $scope.margin.left + $scope.margin.right)
-                .attr("height", $scope.height + $scope.margin.top + $scope.margin.bottom)
-            .append("g")
-                .attr("transform", 
-                      "translate(" + $scope.margin.left + "," + $scope.margin.top + ")");
+			// setup fill color
+			$scope.cValue = function(d) { return d.Manufacturer;},
+			    $scope.color = d3.scale.category10();
 
-        // Get the data
-        $scope.d3 = d3.csv($scope.fileName, function(error, data) {
-            data.forEach(function(d) {
-                d.date = $scope.parseDate(d.date);
-                d.close = +d.close;
-            });
+			// add the graph canvas to the body of the webpage
+			$scope.svg = d3.select("body").append("svg")
+			    .attr("width", $scope.width + $scope.margin.left + $scope.margin.right)
+			    .attr("height", $scope.height + $scope.margin.top + $scope.margin.bottom)
+			  .append("g")
+			    .attr("transform", "translate(" + $scope.margin.left + "," + $scope.margin.top + ")");
 
-            // Scale the range of the data
-            $scope.x.domain(d3.extent(data, function(d) { return d.date; }));
-            $scope.y.domain([0, d3.max(data, function(d) { return d.close; })]);
+			// add the tooltip area to the webpage
+			$scope.tooltip = d3.select("body").append("div")
+			    .attr("class", "tooltip")
+			    .style("opacity", 0);
 
-            // Add the valueline path.
-            $scope.svg.append("path")
-                .attr("class", "line")
-                .attr("d", $scope.valueline(data));
+			// load data
+			$scope.d3 = d3.csv($scope.fileName, function(error, data) {
 
-            // Add the scatterplot
-            $scope.svg.selectAll("dot")
-                .data(data)
-              .enter().append("circle")
-                .attr("r", 3.5)
-                .attr("cx", function(d) { return $scope.x(d.date); })
-                .attr("cy", function(d) { return $scope.y(d.close); });
+			  // change string (from CSV) into number format
+			  data.forEach(function(d) {
+			    d.Calories = +d.Calories;
+			    d["Protein (g)"] = +d["Protein (g)"];
+			//    console.log(d);
+			  });
 
-            // Add the X Axis
-            $scope.svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + $scope.height + ")")
-                .call($scope.xAxis);
+			  // don't want dots overlapping axis, so add in buffer to data domain
+			  $scope.xScale.domain([d3.min(data, $scope.xValue)-1, d3.max(data, $scope.xValue)+1]);
+			  $scope.yScale.domain([d3.min(data, $scope.yValue)-1, d3.max(data, $scope.yValue)+1]);
 
-            // Add the Y Axis
-            $scope.svg.append("g")
-                .attr("class", "y axis")
-                .call($scope.yAxis);
+			  // x-axis
+			  $scope.svg.append("g")
+			      .attr("class", "x axis")
+			      .attr("transform", "translate(0," + $scope.height + ")")
+			      .call($scope.xAxis)
+			    .append("text")
+			      .attr("class", "label")
+			      .attr("x", $scope.width)
+			      .attr("y", -6)
+			      .style("text-anchor", "end")
+			      .text("Calories");
 
-        });
+			  // y-axis
+			  $scope.svg.append("g")
+			      .attr("class", "y axis")
+			      .call($scope.yAxis)
+			    .append("text")
+			      .attr("class", "label")
+			      .attr("transform", "rotate(-90)")
+			      .attr("y", 6)
+			      .attr("dy", ".71em")
+			      .style("text-anchor", "end")
+			      .text("Protein (g)");
+
+			  // draw dots
+			  $scope.svg.selectAll(".dot")
+			      .data(data)
+			    .enter().append("circle")
+			      .attr("class", "dot")
+			      .attr("r", 3.5)
+			      .attr("cx", $scope.xMap)
+			      .attr("cy", $scope.yMap)
+			      .style("fill", function(d) { return $scope.color($scope.cValue(d));}) 
+			      .on("mouseover", function(d) {
+			          tooltip.transition()
+			               .duration(200)
+			               .style("opacity", .9);
+			          tooltip.html(d["Name"] + "<br/> (" + $scope.xValue(d) 
+				        + ", " + yValue(d) + ")")
+			               .style("left", (d3.event.pageX + 5) + "px")
+			               .style("top", (d3.event.pageY - 28) + "px");
+			      })
+			      .on("mouseout", function(d) {
+			          tooltip.transition()
+			               .duration(500)
+			               .style("opacity", 0);
+			      });
+
+			  // draw legend
+			  $scope.legend = $scope.svg.selectAll(".legend")
+			      .data($scope.color.domain())
+			    .enter().append("g")
+			      .attr("class", "legend")
+			      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+			  // draw legend colored rectangles
+			  $scope.legend.append("rect")
+			      .attr("x", $scope.width - 18)
+			      .attr("$scope.width", 18)
+			      .attr("$scope.height", 18)
+			      .style("fill", $scope.color);
+
+			  // draw legend text
+			  $scope.legend.append("text")
+			      .attr("x", $scope.width - 24)
+			      .attr("y", 9)
+			      .attr("dy", ".35em")
+			      .style("text-anchor", "end")
+			      .text(function(d) { return d;})
+			});
+
+		}
+
+		else if (chartType == 'Bar') {
+
+		}
+
+		else if (chartType == 'Pie') {
+			
+		}
+
+
     }
 	
 }]);
