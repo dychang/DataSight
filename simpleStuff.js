@@ -2,6 +2,8 @@ function makePie(){
 
 var fileName = "";
 fileName = document.getElementById("mytext").value;
+var categoryName = "age";
+var categoryValue = "population";
 
 var width = 960,
     height = 500,
@@ -20,7 +22,7 @@ var labelArc = d3.svg.arc()
 
 var pie = d3.layout.pie()
     .sort(null)
-    .value(function(d) { return d.population; });
+    .value(function(d) { return d[categoryValue]; });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -39,16 +41,16 @@ d3.csv(fileName, type, function(error, data) {
 
   g.append("path")
       .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.age); });
+      .style("fill", function(d) { return color(d.data[categoryName]); });
 
   g.append("text")
       .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
       .attr("dy", ".35em")
-      .text(function(d) { return d.data.age; });
+      .text(function(d) { return d.data[categoryName]; });
 });
 
 function type(d) {
-  d.population = +d.population;
+  d[categoryValue] = +d[categoryValue];
   return d;
 }
 
