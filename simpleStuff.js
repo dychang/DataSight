@@ -1,20 +1,22 @@
-var app = angular.module('DataAggApp', []);
+var app = angular.module('DataAggApp', ["checklist-model"]);
 
 
 app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
-	$scope.reader = new FileReader();
+	$scope.reader = new FileReader();  
+	$scope.user = {
+    	cols: []
+  	};
 
 	//Event Listeners
 	$scope.reader.onload = function(e) {
-	  $scope.fileText = $scope.reader.result;
-	  console.log($scope.fileText);
+  		$scope.fileText = $scope.reader.result;
+		$scope.getColumns($scope.fileText);
 	}
 
 	//Function Definitions
 	$scope.readFile = function() {
 		$scope.selectedFile = $('#input').get(0).files[0];
 		$scope.fileName = $scope.selectedFile.name;
-		console.log($scope.selectedFile);
 
 		$scope.reader.readAsText($scope.selectedFile);
 	}
@@ -23,6 +25,26 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.chartTypeBtn = function(chartType) {
 		$scope.chartType = chartType;
 		$("#confirmModal").modal("toggle");
+	}
+
+	$scope.getColumns = function(file) {
+        $scope.allTextLines = file.split(/\r\n|\n/);
+        $scope.lines = [];
+        for (var i=0; i<$scope.allTextLines.length; i++) {
+            var data = $scope.allTextLines[i].split(';');
+
+            var tarr = [];
+            for (var j=0; j<data.length; j++) {
+                tarr.push(data[j]);
+            }
+            $scope.lines.push(tarr);
+        }
+
+     	$scope.fileColumns = $scope.lines[0].toString().split(',');
+	}
+
+	$scope.showSelected = function() {
+		console.log($scope.user.cols);
 	}
 
 	$scope.run_Scatter = function() {

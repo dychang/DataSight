@@ -22,6 +22,9 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+  <!-- Checklist Model -->
+  <script src="Checklist-model.js"></script>
+
   <!-- The most swaggy JS file known to man -->
   <script src="simpleStuff.js"></script>
 
@@ -82,7 +85,7 @@
               </div>
             </div>
           </div>
-          <!-- end of Modal-->
+          <!-- end of Chart Type Modal-->
 
           <div id="confirmModal" class="modal fade" role = "dialog">
             <div class="modal-dialog">
@@ -95,17 +98,22 @@
                 File: {{fileName}}
                 Chart Type: {{chartType}}
                 <hr>
+                <h5>Select columns to display:</h5>
+                <div ng-repeat="col in fileColumns">
+                  <input type="checkbox" checklist-model="user.cols" checklist-value="col"> {{col}}
+                <br>
+                </div>
                 </div>
                 <div class="modal-footer">
                   <div>
                     <br>
-                    <button type="button" class="btn btn-default" data-dismiss = "modal">Confirm</button>
+                    <button type="button" class="btn btn-default" data-dismiss = "modal" ng-click="showSelected()">Confirm</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- end of Modal-->
+          <!-- end of Column Selection Modal-->
         </div>
 </body>
 
