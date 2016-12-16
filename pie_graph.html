@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <head>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src = "simpleStuff.js"></script>
+<script src = "pie_graph.js"></script>
 </head>
 
 <style>
@@ -18,7 +18,10 @@
 
 </style>
 <body>
-<input type="text" id="mytext">
+<input type="text" placeholder="filename.csv" id="mytext">
+<input type="text" placeholder="CategoryName" id="categoryName">
+<input type="text" placeholder="CategoryValue" id="categoryValue">
+
 <button onclick="makePie()">Type the name of your file and then click me</button>
 <!--
 <script>
