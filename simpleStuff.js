@@ -28,8 +28,8 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-d3.csv("pie_data.csv", type, function(error, data) {
-//d3.csv(fileName, type, function(error, data) {
+//d3.csv("pie_data.csv", type, function(error, data) {
+d3.csv(fileName, type, function(error, data) {
   if (error) throw error;
 
   var g = svg.selectAll(".arc")
@@ -46,6 +46,11 @@ d3.csv("pie_data.csv", type, function(error, data) {
       .attr("dy", ".35em")
       .text(function(d) { return d.data.age; });
 });
+
+function type(d) {
+  d.population = +d.population;
+  return d;
+}
 
 }
 
