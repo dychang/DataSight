@@ -67,6 +67,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.flushEverything = function() {
     	$scope.user.xcols = [];
     	$scope.user.ycols = [];
+    	$scope.user.legendvals = [];
     	$scope.fileColumns = [];
   	}
 
@@ -84,6 +85,13 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		$("#confirmModal").modal("toggle");
   	}
 
+ //  	$scope.updateSelection = function(position, columns, user.col) {
+	//   angular.forEach(columns, function(subscription, index) {
+	//     if (position != index) 
+	//       subscription.checked = false;
+	//   });
+	// }
+
 	$scope.create_graph = function(chartType) {
 
 		d3.select("svg").remove();
@@ -97,8 +105,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			 * axis - sets up axis
 			 */ 
 
-			 var val1 = "NUMVOTES1";
-			 var val2 = "NUMVOTES2";
+			 var val1 = $scope.user.xcols[0];
+			 var val2 = $scope.user.ycols[0];
 			 var val3 = "NAME";
 
 			var margin = {top: 20, right: 20, bottom: 30, left: 40},

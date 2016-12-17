@@ -89,3 +89,12 @@ h3 {
 h5 {
   
 }
+
+#categories {
+	height: 600px;
+	overflow: auto;
+}
+
+svg {
+	background-color: white;
+}
