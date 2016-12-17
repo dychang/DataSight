@@ -296,13 +296,11 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 					.text(function(d) { return d.data[categoryName]; });
 				});
 
-				function type(d) {
-					d[categoryValue] = +d[categoryValue];
-					return d;
-				}
+			function type(d) {
+				d[categoryValue] = +d[categoryValue];
+				return d;
 			}
-
-
+		}
     }
 	
 }]);
