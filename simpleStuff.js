@@ -354,7 +354,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var fileName = 'pie_data.csv'
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
-			var url = $scope.reader.readAsDataURL($scope.selectedFile);
+			// var url = $scope.reader.readAsDataURL($scope.selectedFile);
 			// console.log($scope.reader + url + $scope.selectedFile);
 
 			var fileName = $scope.fileName;
@@ -382,35 +382,36 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.sort(null)
 						.value(function(d) { return d[categoryValue]; });
 
+			var temp = "translate(" + width / 2 + "," + height / 2 + ")";
+			console.log(temp);
 			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
-						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+						.attr("transform", temp);
 
-			d3.csv(fileName, type, function(error, data) {
-				if (error) throw error;
-
-				// console.log(data);
-				var g = svg.selectAll(".arc")
-							.data(pie(data))
-							.enter().append("g")
-							.attr("class", "arc");
-
-				g.append("path")
-					.attr("d", arc)
-					.style("fill", function(d) { return color(d.data[categoryName]); });
-
-				g.append("text")
-					.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-					.attr("dy", ".35em")
-					.text(function(d) { return d.data[categoryName]; });
-				});
-
-			function type(d) {
-				d[categoryValue] = +d[categoryValue];
-				return d;
+			// converting to float
+			for(var i = 0; i < $scope.data.length; i++) {
+				$scope.data[i] = +$scope.data[i];
 			}
+
+			var data = $scope.data;
+			// console.log(data);
+			var g = svg.selectAll(".arc")
+						.data(pie($scope.data))
+						.enter().append("g")
+						.attr("class", "arc");
+
+			g.append("path")
+				.attr("d", arc)
+				.style("fill", function(d) { return color(d.data[categoryName]); });
+
+			g.append("text")
+				.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+				.attr("dy", ".35em")
+				.text(function(d) { return d.data[categoryName]; });
+			
+
 		}
 
 	$("#visualModal").modal("toggle");
