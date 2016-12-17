@@ -11,7 +11,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
     	xcols: [],
-    	ycols: []
+		ycols: []
   	};
 
   	//Handler for Upload Button
@@ -26,7 +26,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		$scope.fileName = $('#input').get(0).files[0].name;
         $scope.$apply();
 		$("#buttonModal").modal("toggle");
-		
 	}) 
 
 	// FileReader listener
@@ -236,69 +235,64 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		}
 
 		else if (chartType == 'Pie') {
-			console.log($scope.user);
-						// todo parameterize these things
-				// making temp vals for integrate
-			  // var categoryName = document.getElementById("categoryName").value;
-			  // var categoryValue = document.getElementById("categoryValue").value;
-			  // var fileName = document.getElementById("mytext").value;
-			  // var categoryName = 'age';
-			  // var categoryValue = 'population';
-			  var fileName = 'pie_data.csv';
+			// TEMP VALS:
+			// var fileName = 'pie_data.csv'
+			// var categoryName = 'age';
+			// var categoryValue = 'population';
+			var fileName = $scope.fileName;
 
-			  var param = $scope.user;
-			  var categoryName = param.xcols[0];
-			  var categoryValue = param.ycols[0];
+			var param = $scope.user;
+			var categoryName = param.xcols[0];
+			var categoryValue = param.ycols[0];
 
-			  var width = 960,
-			      height = 500,
-			      radius = Math.min(width, height) / 2;
+			var width = 960;
+			var height = 500;
+			var radius = Math.min(width, height) / 2;
 
-			  var color = d3.scale.ordinal()
-			      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+			var color = d3.scale.ordinal()
+							.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-			  var arc = d3.svg.arc()
-			      .outerRadius(radius - 10)
-			      .innerRadius(0);
+			var arc = d3.svg.arc()
+						.outerRadius(radius - 10)
+						.innerRadius(0);
 
-			  var labelArc = d3.svg.arc()
-			      .outerRadius(radius - 40)
-			      .innerRadius(radius - 40);
+			var labelArc = d3.svg.arc()
+							.outerRadius(radius - 40)
+							.innerRadius(radius - 40);
 
-			  var pie = d3.layout.pie()
-			      .sort(null)
-			      .value(function(d) { return d[categoryValue]; });
+			var pie = d3.layout.pie()
+						.sort(null)
+						.value(function(d) { return d[categoryValue]; });
 
-			  var svg = d3.select("body").append("svg")
-			      .attr("width", width)
-			      .attr("height", height)
-			    .append("g")
-			      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+			var svg = d3.select("body").append("svg")
+						.attr("width", width)
+						.attr("height", height)
+						.append("g")
+						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-			  //d3.csv("pie_data.csv", type, function(error, data) {
-			  d3.csv(fileName, type, function(error, data) {
-			    if (error) throw error;
+			d3.csv(fileName, type, function(error, data) {
+				if (error) throw error;
 
-			    var g = svg.selectAll(".arc")
-			        .data(pie(data))
-			      .enter().append("g")
-			        .attr("class", "arc");
+				var g = svg.selectAll(".arc")
+							.data(pie(data))
+							.enter().append("g")
+							.attr("class", "arc");
 
-			    g.append("path")
-			        .attr("d", arc)
-			        .style("fill", function(d) { return color(d.data[categoryName]); });
+				g.append("path")
+					.attr("d", arc)
+					.style("fill", function(d) { return color(d.data[categoryName]); });
 
-			    g.append("text")
-			        .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-			        .attr("dy", ".35em")
-			        .text(function(d) { return d.data[categoryName]; });
-			  });
+				g.append("text")
+					.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+					.attr("dy", ".35em")
+					.text(function(d) { return d.data[categoryName]; });
+				});
 
-			  function type(d) {
-			    d[categoryValue] = +d[categoryValue];
-			    return d;
-			  }
-		}
+				function type(d) {
+					d[categoryValue] = +d[categoryValue];
+					return d;
+				}
+			}
 
 
     }
