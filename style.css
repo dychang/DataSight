@@ -90,9 +90,12 @@ h5 {
   
 }
 
-.categories {
-	height: 600px;
-	overflow: auto;
+.modal-dialog{
+    overflow-y: initial;
+}
+.categories-box{
+    height: 450px;
+    overflow-y: auto;
 }
 
 svg {

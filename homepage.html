@@ -73,20 +73,22 @@
 
           <div id="xSelectModal" class="modal fade" role = "dialog">
             <div class="modal-dialog">
-              <div class="modal-content">
+              <div class="modal-content" class="categories">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
-                <div class="modal-body" class="categories">
-                <h3 align="center">Select Category Columns</h3>
-                <h5>File: {{fileName}}</h5>
-                <h5>Chart Type: {{chartType}}</h5>
-                <hr>
-                <h5>Select category fields:</h5>
-                <div ng-repeat="col in fileColumns">
-                  <input type="checkbox" checklist-model="user.xcols" checklist-value="col"> {{col}}
-                <br>
-                </div>
+                <div class="modal-body">
+                  <h3 align="center">Select Category Column</h3>
+                  <h5>File: {{fileName}}</h5>
+                  <h5>Chart Type: {{chartType}}</h5>
+                  <hr>
+                  <div class="categories-box">
+                    <h5>Select category field:</h5>
+                    <div ng-repeat="col in fileColumns">
+                      <input type="checkbox" checklist-model="user.xcols" checklist-value="col"> {{col}}
+                      <br>
+                    </div>
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <div>
@@ -102,20 +104,22 @@
 
           <div id="ySelectModal" class="modal fade" role = "dialog">
             <div class="modal-dialog">
-              <div class="modal-content" id="categories">
+              <div class="modal-content" class="categories">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
-                <div class="modal-body" class="categories">
-                <h3 align="center">Selected Value Columns</h3>
-                <h5>File: {{fileName}}</h5>
-                <h5>Chart Type: {{chartType}}</h5>
-                <hr>
-                <h5>Select data fields:</h5>
-                <div ng-repeat="col in postFilteredCols">
-                  <input type="checkbox" checklist-model="user.ycols" checklist-value="col"> {{col}}
-                <br>
-                </div>
+                <div class="modal-body">
+                  <h3 align="center">Selected Value Column</h3>
+                  <h5>File: {{fileName}}</h5>
+                  <h5>Chart Type: {{chartType}}</h5>
+                  <hr>
+                  <div class="categories-box">
+                    <h5>Select data field:</h5>
+                    <div ng-repeat="col in postFilteredCols">
+                      <input type="checkbox" checklist-model="user.ycols" checklist-value="col"> {{col}}
+                    <br>
+                  </div>
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <div>
