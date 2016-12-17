@@ -3,15 +3,12 @@
 
 var app = angular.module('DataAggApp', ["checklist-model"]);
 
-function makePie(){
-	
-};
-
 app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
     	xcols: [],
-		ycols: []
+		ycols: [],
+		legendcol: []
   	};
 
   	//Handler for Upload Button
@@ -70,24 +67,49 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.flushEverything = function() {
     	$scope.user.xcols = [];
     	$scope.user.ycols = [];
-    	$scope.user.legendvals = [];
+    	$scope.user.legendcol = [];
     	$scope.fileColumns = [];
   	}
 
   	// Removes user selected x-axis columns and toggles y-select modal
   	$scope.xSelBtn = function() {
-		$scope.postFilteredCols = $scope.fileColumns.filter(function(d) {
+		$scope.dispYCols = $scope.fileColumns.filter(function(d) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
-
+		// TODO validate x col
+    	$scope.user.ycols = [];
 		$("#ySelectModal").modal("toggle");
   	}
 
-  	// Toggles y-select modal
+  	// Toggles legend-select modal
   	$scope.ySelBtn = function() {
-		$("#confirmModal").modal("toggle");
+
+  		// TODO validate y col
+  		// alert($scope.lines[1].split(',')[1]);
+  		var y = String($scope.lines[1]).split(',')[1];
+  		if(!parseFloat(y)) {
+			
+  			alert("Invalid column data type");
+  		}
+
+  		$scope.dispLegendCols = $scope.dispYCols.filter(function(d) {
+		  return $scope.user.ycols.indexOf(d) < 0;
+		});
+
+    	$scope.user.legendcol = [];
+    	
+  		if($scope.chartType.toUpperCase() == "SCATTER") {
+			$("#legendSelectModal").modal("toggle");
+		}
+		else {
+			$("#confirmModal").modal("toggle");
+		}
   	}
 
+  	// Toggles confirm-select modal
+  	$scope.legendSelBtn = function() {
+		$("#confirmModal").modal("toggle");
+  	}
  //  	$scope.updateSelection = function(position, columns, user.col) {
 	//   angular.forEach(columns, function(subscription, index) {
 	//     if (position != index) 
@@ -140,14 +162,14 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			    color = d3.scale.category20();
 
 			// add the graph canvas to the body of the webpage
-			var svg = d3.select("body").append("svg")
+			var svg = d3.select("#graph").append("svg")
 			    .attr("width", width + margin.left + margin.right)
 			    .attr("height", height + margin.top + margin.bottom)
 			  .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// add the tooltip area to the webpage
-			var tooltip = d3.select("body").append("div")
+			var tooltip = d3.select("#graph").append("div")
 			    .attr("class", "tooltip")
 			    .style("opacity", 0);
 
@@ -240,6 +262,77 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 		else if (chartType == 'Bar') {
 
+			var val1 = $scope.user.xcols[0];
+			var val2 = $scope.user.ycols[0];
+
+			var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    			width = 600,
+    			height = 300;
+
+		var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+		var y = d3.scale.linear().range([height, 0]);
+
+		var xAxis = d3.svg.axis()
+		    .scale(x)
+		    .orient("bottom")
+		    .ticks(10);
+
+		var yAxis = d3.svg.axis()
+		    .scale(y)
+		    .orient("left")
+		    .ticks(10);
+
+		var svgCont = d3.select("body").append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+		    .attr("transform", 
+		          "translate(" + margin.left + "," + margin.top + ")");
+
+		d3.csv("bar_data.csv", function(error, data) {
+
+		    data.forEach(function(d) {
+		        // d.date = parseDate(d.date);
+		        d.value = +d.value;
+		    });
+		  
+		  x.domain(data.map(function(d) { return d[val1]; }));
+		  y.domain([0, d3.max(data, function(d) { return d[val2]; })]);
+
+		  svgCont.append("g")
+		      .attr("class", "x axis")
+		      .attr("transform", "translate(0," + height + ")")
+		      .call(xAxis)
+		    .selectAll("text")
+		      .style("text-anchor", "end")
+		      .attr("dx", "-.8em")
+		      .attr("dy", "-.55em")
+		      .attr("transform", "rotate(-90)" )
+		      // .text(val1)
+		      ;
+
+		  svgCont.append("g")
+		      .attr("class", "y axis")
+		      .call(yAxis)
+		    .append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".71em")
+		      .style("text-anchor", "end")
+		      // .text(val2)
+		      ;
+
+		  svgCont.selectAll("bar")
+		      .data(data)
+		    .enter().append("rect")
+		      .style("fill", "teal")
+		      .attr("x", function(d) { return x([d[val1]]); })
+		      .attr("width", x.rangeBand())
+		      .attr("y", function(d) { return y(d[val2]); })
+		      .attr("height", function(d) { return height - y(d[val2]); });
+
+});
 		}
 
 		else if (chartType == 'Pie') {
@@ -272,7 +365,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.sort(null)
 						.value(function(d) { return d[categoryValue]; });
 
-			var svg = d3.select("body").append("svg")
+			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
@@ -301,6 +394,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 				return d;
 			}
 		}
+
+	$("#visualModal").modal("toggle");
     }
 	
 }]);
