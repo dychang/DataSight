@@ -77,7 +77,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
   	// Removes user selected x-axis columns and toggles y-select modal
   	$scope.xSelBtn = function() {
-		$scope.postFilteredCols = $scope.fileColumns.filter(function(d) {
+		$scope.dispYCols = $scope.fileColumns.filter(function(d) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
 
@@ -85,11 +85,20 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		$("#ySelectModal").modal("toggle");
   	}
 
-  	// Toggles y-select modal
+  	// Toggles legend-select modal
   	$scope.ySelBtn = function() {
-		$("#confirmModal").modal("toggle");
+  		$scope.dispLegendCols = $scope.dispYCols.filter(function(d) {
+		  return $scope.user.ycols.indexOf(d) < 0;
+		});
+
+    	$scope.user.legendcol = [];
+		$("#legendSelectModal").modal("toggle");
   	}
 
+  	// Toggles confirm-select modal
+  	$scope.legendSelBtn = function() {
+		$("#confirmModal").modal("toggle");
+  	}
  //  	$scope.updateSelection = function(position, columns, user.col) {
 	//   angular.forEach(columns, function(subscription, index) {
 	//     if (position != index) 
