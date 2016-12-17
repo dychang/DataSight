@@ -49,7 +49,7 @@
               <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
             </div>
             <div class="modal-body">
-              <h3 align="center">Chart Type</h3>
+              <h3 align="center">Select Chart Type</h3>
               <h5>File: {{fileName}}</h5>
               <hr>
               <div class = "row">
@@ -146,7 +146,7 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body" >
-                <h3 align="center">Confirm Screen</h3>
+                <h3 align="center">Confirm</h3>
                 <h5>File: {{fileName}}</h5>
                 <h5>Chart Type: {{chartType}}</h5>
                 <hr>
@@ -171,6 +171,32 @@
             </div>
           </div>
           <!-- end of Confirm Selection Modal-->
+
+          <!-- TODO: Might scrap this??-->
+          <div id="visualModal" class="modal fade" role = "dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+                </div>
+                <div class="modal-body" >
+                <h3 align="center">Here's Your Data!</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
+                <hr>
+
+                </div>
+                <div class="modal-footer">
+                  <div>
+                    <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#confirmModal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of Visual Display Modal-->
     </div>
 </body>
 </html>

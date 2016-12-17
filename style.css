@@ -76,3 +76,16 @@ body {
 .btn-lg.round {
   border-radius: 24px;
 }
+
+.checkbox-inline, .checkbox {
+  font-size:12px;
+   line-height: 1.9;
+}
+
+h3 {
+
+}
+
+h5 {
+  
+}
