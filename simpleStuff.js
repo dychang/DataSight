@@ -240,6 +240,77 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 		else if (chartType == 'Bar') {
 
+			var val1 = $scope.user.xcols[0];
+			var val2 = $scope.user.ycols[0];
+
+			var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    			width = 600,
+    			height = 300;
+
+		var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+		var y = d3.scale.linear().range([height, 0]);
+
+		var xAxis = d3.svg.axis()
+		    .scale(x)
+		    .orient("bottom")
+		    .ticks(10);
+
+		var yAxis = d3.svg.axis()
+		    .scale(y)
+		    .orient("left")
+		    .ticks(10);
+
+		var svgCont = d3.select("body").append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		  .append("g")
+		    .attr("transform", 
+		          "translate(" + margin.left + "," + margin.top + ")");
+
+		d3.csv("bar_data.csv", function(error, data) {
+
+		    data.forEach(function(d) {
+		        // d.date = parseDate(d.date);
+		        d.value = +d.value;
+		    });
+		  
+		  x.domain(data.map(function(d) { return d[val1]; }));
+		  y.domain([0, d3.max(data, function(d) { return d[val2]; })]);
+
+		  svgCont.append("g")
+		      .attr("class", "x axis")
+		      .attr("transform", "translate(0," + height + ")")
+		      .call(xAxis)
+		    .selectAll("text")
+		      .style("text-anchor", "end")
+		      .attr("dx", "-.8em")
+		      .attr("dy", "-.55em")
+		      .attr("transform", "rotate(-90)" )
+		      // .text(val1)
+		      ;
+
+		  svgCont.append("g")
+		      .attr("class", "y axis")
+		      .call(yAxis)
+		    .append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".71em")
+		      .style("text-anchor", "end")
+		      // .text(val2)
+		      ;
+
+		  svgCont.selectAll("bar")
+		      .data(data)
+		    .enter().append("rect")
+		      .style("fill", "teal")
+		      .attr("x", function(d) { return x([d[val1]]); })
+		      .attr("width", x.rangeBand())
+		      .attr("y", function(d) { return y(d[val2]); })
+		      .attr("height", function(d) { return height - y(d[val2]); });
+
+});
 		}
 
 		else if (chartType == 'Pie') {
