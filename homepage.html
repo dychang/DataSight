@@ -21,6 +21,9 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+  <!-- Checklist Model -->
+  <script src="Checklist-model.js"></script>
+
   <!-- The most swaggy JS file known to man -->
   <script src="simpleStuff.js"></script>
 
@@ -29,19 +32,15 @@
 </head>
 
 <body ng-app="DataAggApp">
-     <div>  
-          <h1 style = "text-align: center;">
-          Election Data Aggregator
-          </h1>
-
-          <h3>
-          Select a file to represent
-          </h3>
-     </div>
-
   <div class="container" ng-controller="DataImportCtrl">
-   <input type="file" id="input" value = "testFile2" ng-model="fileName" ng-init="">
-   <input type="submit" value="Upload" ng-click = "readFile()" data-toggle="modal" data-target="#buttonModal">
+  <div align="center">
+    <img src="img/logo_transparent.png" class="img-fluid" alt="Responsive image">
+  </div>
+
+    <div>
+      <input type='file' id="input" ng-model="fileName" ng-init="" accept=".csv"/>
+      <button type="button" id='button' class="btn btn-success btn-lg btn-block btn-main round">Select A File To Visualize</button>
+    </div>  
 
     <div id="buttonModal" class="modal fade" role = "dialog">
         <div class="modal-dialog">
@@ -50,8 +49,8 @@
               <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
             </div>
             <div class="modal-body">
-              <h3>Chart Type</h3>
-              File: {{fileName}}
+              <h3 align="center">Select Chart Type</h3>
+              <h5>File: {{fileName}}</h5>
               <hr>
               <div class = "row">
                 <div class = "col-lg-12 col-md-12 col-sm-12">
@@ -80,30 +79,124 @@
           </div>
         </div>
       </div>
-      <!-- end of Modal-->
+      <!-- end of Button Modal-->
 
-      <div id="confirmModal" class="modal fade" role = "dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
-            </div>
-            <div class="modal-body" >
-            <h3>Confirm Screen</h3>
-            File: {{fileName}}
-            Chart Type: {{chartType}}
-            <hr>
-            </div>
-            <div class="modal-footer">
-              <div>
+          <div id="xSelectModal" class="modal fade" role = "dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+                </div>
+                <div class="modal-body" >
+                <h3 align="center">Select Category Columns</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
+                <hr>
+                <h5>Select category fields:</h5>
+                <div ng-repeat="col in fileColumns">
+                  <input type="checkbox" checklist-model="user.xcols" checklist-value="col"> {{col}}
                 <br>
-                <button type="button" class="btn btn-default" data-dismiss = "modal" ng-click="create_graph(chartType)">Confirm</button>
+                </div>
+                </div>
+                <div class="modal-footer">
+                  <div>
+                    <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#buttonModal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="xSelBtn()">Next</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!-- end of Modal-->
+          <!-- end of Column X-Selection Modal-->
+
+          <div id="ySelectModal" class="modal fade" role = "dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+                </div>
+                <div class="modal-body" >
+                <h3 align="center">Selected Value Columns</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
+                <hr>
+                <h5>Select data fields:</h5>
+                <div ng-repeat="col in postFilteredCols">
+                  <input type="checkbox" checklist-model="user.ycols" checklist-value="col"> {{col}}
+                <br>
+                </div>
+                </div>
+                <div class="modal-footer">
+                  <div>
+                    <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#xSelectModal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ySelBtn()">Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of Column Y-Selection Modal-->
+
+          <div id="confirmModal" class="modal fade" role = "dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+                </div>
+                <div class="modal-body" >
+                <h3 align="center">Confirm</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
+                <hr>
+                <h5>Columns selected:</h5>
+                <div ng-repeat="col in user.xcols">
+                  xcols: {{col}}
+                <br>
+                </div>
+                <div ng-repeat="col in user.ycols">
+                  ycols: {{col}}
+                <br>
+                </div>
+                </div>
+                <div class="modal-footer">
+                  <div>
+                    <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#ySelectModal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="create_graph(chartType)">Generate Visual!</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of Confirm Selection Modal-->
+
+          <!-- TODO: Might scrap this??-->
+          <div id="visualModal" class="modal fade" role = "dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+                </div>
+                <div class="modal-body" >
+                <h3 align="center">Here's Your Data!</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
+                <hr>
+
+                </div>
+                <div class="modal-footer">
+                  <div>
+                    <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#confirmModal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of Visual Display Modal-->
     </div>
 </body>
 </html>

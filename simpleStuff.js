@@ -1,30 +1,88 @@
 //TODO: Fix legend so its not so large and covering stuff
 //TODO: Replace the val1,val2,val3 with the values that the user picks
 
-var app = angular.module('DataAggApp', []);
-app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
-	$scope.reader = new FileReader();
+var app = angular.module('DataAggApp', ["checklist-model"]);
 
-	//Event Listeners
+app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
+	$scope.reader = new FileReader();  
+	$scope.user = {
+    	xcols: [],
+    	ycols: []
+  	};
+
+  	//Handler for Upload Button
+	$('#button').click(function(){
+	   $("input[type='file']").trigger('click');
+	})
+
+	//Handler for file selection - parses file selected
+	$("input[type='file']").change(function(){
+		$scope.flushEverything();
+		$scope.readFile();
+		$scope.fileName = $('#input').get(0).files[0].name;
+        $scope.$apply();
+		$("#buttonModal").modal("toggle");
+		
+	}) 
+
+	// FileReader listener
 	$scope.reader.onload = function(e) {
-	  $scope.fileText = $scope.reader.result;
-	  console.log($scope.fileText);
+  		$scope.fileText = $scope.reader.result;
+		$scope.getColumns($scope.fileText);
 	}
 
-	//Function Definitions
+	// Update button handler - begins file parsing
 	$scope.readFile = function() {
 		$scope.selectedFile = $('#input').get(0).files[0];
 		$scope.fileName = $scope.selectedFile.name;
-		console.log($scope.selectedFile);
 
 		$scope.reader.readAsText($scope.selectedFile);
 	}
 
-	//Handler for chart type selection buttons
+	// Handler for chart type selection - updates global chartType var
+	// and toggles x-select modal
 	$scope.chartTypeBtn = function(chartType) {
 		$scope.chartType = chartType;
-		$("#confirmModal").modal("toggle");
+		$("#xSelectModal").modal("toggle");
 	}
+
+	// Gets column names from file and stores in $scope.fileColumns
+	$scope.getColumns = function(file) {
+        $scope.allTextLines = file.split(/\r\n|\n/);
+        $scope.lines = [];
+        for (var i=0; i<$scope.allTextLines.length; i++) {
+            var data = $scope.allTextLines[i].split(';');
+
+            var tarr = [];
+            for (var j=0; j<data.length; j++) {
+                tarr.push(data[j]);
+            }
+            $scope.lines.push(tarr);
+        }
+
+     	$scope.fileColumns = $scope.lines[0].toString().split(',');
+	}
+
+	// Flushes global structs relevant to column selection
+	$scope.flushEverything = function() {
+    	$scope.user.xcols = [];
+    	$scope.user.ycols = [];
+    	$scope.fileColumns = [];
+  	}
+
+  	// Removes user selected x-axis columns and toggles y-select modal
+  	$scope.xSelBtn = function() {
+		$scope.postFilteredCols = $scope.fileColumns.filter(function(d) {
+		  return $scope.user.xcols.indexOf(d) < 0;
+		});
+
+		$("#ySelectModal").modal("toggle");
+  	}
+
+  	// Toggles y-select modal
+  	$scope.ySelBtn = function() {
+		$("#confirmModal").modal("toggle");
+  	}
 
 	$scope.create_graph = function(chartType) {
 
