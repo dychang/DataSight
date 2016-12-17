@@ -1,5 +1,6 @@
+//TODO: Fix legend so its not so large and covering stuff
+//TODO: Replace the val1,val2,val3 with the values that the user picks<<<<<<< HEAD
 var app = angular.module('DataAggApp', ["checklist-model"]);
-
 
 app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
@@ -55,77 +56,158 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
     	$scope.fileColumns = [];
   	}
 
-	$scope.run_Scatter = function() {
+	$scope.create_graph = function(chartType) {
 
-        // Set the dimensions of the canvas / graph
-        $scope.margin = {top: 30, right: 20, bottom: 30, left: 50},
-            $scope.width = 600 - $scope.margin.left - $scope.margin.right,
-            $scope.height = 270 - $scope.margin.top - $scope.margin.bottom;
+		d3.select("svg").remove();
 
-        // Parse the date / time
-        $scope.parseDate = d3.time.format("%d-%b-%y").parse;
+		if (chartType == 'Scatter') {
 
-        // Set the ranges
-        $scope.x = d3.time.scale().range([0, $scope.width]);
-        $scope.y = d3.scale.linear().range([$scope.height, 0]);
+			/* 
+			 * value accessor - returns the value to encode for a given data object.
+			 * scale - maps value to a visual display encoding, such as a pixel position.
+			 * map function - maps from data value to display value
+			 * axis - sets up axis
+			 */ 
 
-        // Define the axes
-        $scope.xAxis = d3.svg.axis().scale($scope.x)
-            .orient("bottom").ticks(5);
+			 var val1 = "NUMVOTES1";
+			 var val2 = "NUMVOTES2";
+			 var val3 = "NAME";
 
-        $scope.yAxis = d3.svg.axis().scale($scope.y)
-            .orient("left").ticks(5);
+			var margin = {top: 20, right: 20, bottom: 30, left: 40},
+			    width = 960 - margin.left - margin.right,
+			    height = 500 - margin.top - margin.bottom;
 
-        // Define the line
-        $scope.valueline = d3.svg.line()
-            .x(function(d) { return $scope.x(d.date); })
-            .y(function(d) { return $scope.y(d.close); });
-            
-        // Adds the svg canvas
-        $scope.svg = d3.select("body")
-            .append("svg")
-                .attr("width", $scope.width + $scope.margin.left + $scope.margin.right)
-                .attr("height", $scope.height + $scope.margin.top + $scope.margin.bottom)
-            .append("g")
-                .attr("transform", 
-                      "translate(" + $scope.margin.left + "," + $scope.margin.top + ")");
+			/* 
+			 * value accessor - returns the value to encode for a given data object.
+			 * scale - maps value to a visual display encoding, such as a pixel position.
+			 * map function - maps from data value to display value
+			 * axis - sets up axis
+			 */ 
 
-        // Get the data
-        $scope.d3 = d3.csv($scope.fileName, function(error, data) {
-            data.forEach(function(d) {
-                d.date = $scope.parseDate(d.date);
-                d.close = +d.close;
-            });
+			// setup x 
+			var xValue = function(d) { return d[val1];}, // data -> value
+			    xScale = d3.scale.linear().range([0, width]), // value -> display
+			    xMap = function(d) { return xScale(xValue(d));}, // data -> display
+			    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
-            // Scale the range of the data
-            $scope.x.domain(d3.extent(data, function(d) { return d.date; }));
-            $scope.y.domain([0, d3.max(data, function(d) { return d.close; })]);
+			// setup y
+			var yValue = function(d) { return d[val2];}, // data -> value
+			    yScale = d3.scale.linear().range([height, 0]), // value -> display
+			    yMap = function(d) { return yScale(yValue(d));}, // data -> display
+			    yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-            // Add the valueline path.
-            $scope.svg.append("path")
-                .attr("class", "line")
-                .attr("d", $scope.valueline(data));
+			// setup fill color
+			var cValue = function(d) { return d[val3];},
+			    color = d3.scale.category20();
 
-            // Add the scatterplot
-            $scope.svg.selectAll("dot")
-                .data(data)
-              .enter().append("circle")
-                .attr("r", 3.5)
-                .attr("cx", function(d) { return $scope.x(d.date); })
-                .attr("cy", function(d) { return $scope.y(d.close); });
+			// add the graph canvas to the body of the webpage
+			var svg = d3.select("body").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			  .append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            // Add the X Axis
-            $scope.svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + $scope.height + ")")
-                .call($scope.xAxis);
+			// add the tooltip area to the webpage
+			var tooltip = d3.select("body").append("div")
+			    .attr("class", "tooltip")
+			    .style("opacity", 0);
 
-            // Add the Y Axis
-            $scope.svg.append("g")
-                .attr("class", "y axis")
-                .call($scope.yAxis);
+			// load data
+			d3.csv($scope.fileName, function(error, data) {
 
-        });
+			  // change string (from CSV) into number format
+			  data.forEach(function(d) {
+			    d[val1] = +d[val1];
+			    d[val2] = +d[val2];
+			//    console.log(d);
+			  });
+
+			  // don't want dots overlapping axis, so add in buffer to data domain
+			  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+			  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+
+			  // x-axis
+			  svg.append("g")
+			      .attr("class", "x axis")
+			      .attr("transform", "translate(0," + height + ")")
+			      .call(xAxis)
+			    .append("text")
+			      .attr("class", "label")
+			      .attr("x", width)
+			      .attr("y", -6)
+			      .style("text-anchor", "end")
+			      .text(val1);
+
+			  // y-axis
+			  svg.append("g")
+			      .attr("class", "y axis")
+			      .call(yAxis)
+			    .append("text")
+			      .attr("class", "label")
+			      .attr("transform", "rotate(-90)")
+			      .attr("y", 6)
+			      .attr("dy", ".71em")
+			      .style("text-anchor", "end")
+			      .text(val2);
+
+			  // draw dots
+			  svg.selectAll(".dot")
+			      .data(data)
+			    .enter().append("circle")
+			      .attr("class", "dot")
+			      .attr("r", 3.5)
+			      .attr("cx", xMap)
+			      .attr("cy", yMap)
+			      .style("fill", function(d) { return color(cValue(d));}) 
+			      .on("mouseover", function(d) {
+			          tooltip.transition()
+			               .duration(200)
+			               .style("opacity", .9);
+			          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
+			          + ", " + yValue(d) + ")")
+			               .style("left", (d3.event.pageX + 5) + "px")
+			               .style("top", (d3.event.pageY - 28) + "px");
+			      })
+			      .on("mouseout", function(d) {
+			          tooltip.transition()
+			               .duration(500)
+			               .style("opacity", 0);
+			      });
+
+			  // draw legend
+			  var legend = svg.selectAll(".legend")
+			      .data(color.domain())
+			    .enter().append("g")
+			      .attr("class", "legend")
+			      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+			  // draw legend colored rectangles
+			  legend.append("rect")
+			      .attr("x", width - 18)
+			      .attr("width", 18)
+			      .attr("height", 18)
+			      .style("fill", color);
+
+			  // draw legend text
+			  legend.append("text")
+			      .attr("x", width - 24)
+			      .attr("y", 9)
+			      .attr("dy", ".35em")
+			      .style("text-anchor", "end")
+			      .text(function(d) { return d;});
+			});
+
+		}
+
+		else if (chartType == 'Bar') {
+
+		}
+
+		else if (chartType == 'Pie') {
+
+		}
+
+
     }
 	
 }]);

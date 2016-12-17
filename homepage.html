@@ -1,7 +1,6 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<meta charset="utf-8">
 <head>
-  <meta charset="utf-8">
   <title>Election Aggregator Home</title>
 
   <!-- JQuery Core JavaScript -->
@@ -11,7 +10,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 
   <!-- D3.js -->
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -32,7 +31,6 @@
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
-
 <body ng-app="DataAggApp">
      <div>  
           <h1 style = "text-align: center;">
@@ -45,47 +43,47 @@
      </div>
 
   <div class="container" ng-controller="DataImportCtrl">
-       <input type="file" id="input" value = "testFile2" ng-model="fileName" ng-init="">
-       <input type="submit" value="Upload" ng-click = "readFile(); flushEverything()" data-toggle="modal" data-target="#buttonModal">
+     <input type="file" id="input" value = "testFile2" ng-model="fileName" ng-init="">
+     <input type="submit" value="Upload" ng-click = "readFile(); flushEverything()" data-toggle="modal" data-target="#buttonModal">
 
-        <div id="buttonModal" class="modal fade" role = "dialog">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+    <div id="buttonModal" class="modal fade" role = "dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
+            </div>
+            <div class="modal-body">
+              <h3>Chart Type</h3>
+              File: {{fileName}}
+              <hr>
+              <div class = "row">
+                <div class = "col-lg-12 col-md-12 col-sm-12">
+                  <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Pie')" data-dismiss="modal">Pie</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Bar')" data-dismiss="modal">Bar</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Line')" data-dismiss="modal">Line</button>
                 </div>
-                <div class="modal-body">
-                  <h3>Chart Type</h3>
-                  File: {{fileName}}
-                  <hr>
-                  <div class = "row">
-                    <div class = "col-lg-12 col-md-12 col-sm-12">
-                      <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Pie')" data-dismiss="modal">Pie</button>
-                      <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Bar')" data-dismiss="modal">Bar</button>
-                      <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Line')" data-dismiss="modal">Line</button>
-                    </div>
-                  </div>
-                  <br>
-                  <div class = "row">
-                    <div class = "col-lg-12 col-md-12 col-sm-12">
-                      <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Scatter')" data-dismiss="modal">Scatter</button>
-                      <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Histogram')" data-dismiss="modal">Histogram</button>
-                      <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Map')" data-dismiss="modal">Map</button>
-                    </div>
-                  </div>
-                  
-                  
+              </div>
+              <br>
+              <div class = "row">
+                <div class = "col-lg-12 col-md-12 col-sm-12">
+                  <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Scatter')" data-dismiss="modal">Scatter</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Histogram')" data-dismiss="modal">Histogram</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-chart-type" ng-click="chartTypeBtn('Map')" data-dismiss="modal">Map</button>
                 </div>
-                <div class="modal-footer">
-                  <div>
-                    <br>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
+              </div>
+              
+              
+            </div>
+            <div class="modal-footer">
+              <div>
+                <br>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
-          <!-- end of Chart Type Modal-->
+        </div>
+      </div>
+      <!-- end of Button Modal-->
 
           <div id="xSelectModal" class="modal fade" role = "dialog">
             <div class="modal-dialog">
@@ -167,14 +165,13 @@
                 <div class="modal-footer">
                   <div>
                     <br>
-                    <button type="button" class="btn btn-default" data-dismiss = "modal" ng-click="showSelected()">Generate!</button>
+                    <button type="button" class="btn btn-default" data-dismiss = "modal" ng-click="create_graph(chartType)">Generate!</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <!-- end of Confirm Selection Modal-->
-        </div>
+    </div>
 </body>
-
 </html>
