@@ -340,6 +340,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var fileName = 'pie_data.csv'
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
+			
 			var fileName = $scope.fileName;
 
 			var param = $scope.user;
