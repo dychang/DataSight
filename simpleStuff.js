@@ -50,9 +50,9 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.getColumns = function(file) {
         $scope.allTextLines = file.split(/\r\n|\n/);
         $scope.lines = [];
+        $scope.data = [];
         for (var i=0; i<$scope.allTextLines.length; i++) {
             var data = $scope.allTextLines[i].split(';');
-
             var tarr = [];
             for (var j=0; j<data.length; j++) {
                 tarr.push(data[j]);
@@ -61,6 +61,20 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
         }
 
      	$scope.fileColumns = $scope.lines[0].toString().split(',');
+     	$scope.data = [];
+     	for (var i = 0; i < $scope.allTextLines.length; i++) {
+     		var line = $scope.allTextLines[i].split(',');
+     		var row = {};
+     		
+     		for(var j = 1; j < line.length; j++) {
+     			row[$scope.fileColumns[j]] = line[j];
+     			console.log($scope.fileColumns[j] + ":" + line[j]);
+     		}
+     		$scope.data.push(row);
+     		console.log(row);	
+     	}
+
+     	console.log($scope.data);
 	}
 
 	// Flushes global structs relevant to column selection
@@ -340,6 +354,9 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var fileName = 'pie_data.csv'
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
+			var url = $scope.reader.readAsDataURL($scope.selectedFile);
+			// console.log($scope.reader + url + $scope.selectedFile);
+
 			var fileName = $scope.fileName;
 
 			var param = $scope.user;
@@ -374,6 +391,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			d3.csv(fileName, type, function(error, data) {
 				if (error) throw error;
 
+				// console.log(data);
 				var g = svg.selectAll(".arc")
 							.data(pie(data))
 							.enter().append("g")
