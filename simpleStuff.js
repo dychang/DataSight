@@ -80,12 +80,24 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
 
+		// TODO validate x col
+
+
 		$("#ySelectModal").modal("toggle");
   	}
 
   	// Toggles y-select modal
   	$scope.ySelBtn = function() {
-		$("#confirmModal").modal("toggle");
+
+  		// TODO validate y col
+  		// alert($scope.lines[1].split(',')[1]);
+  		var y = String($scope.lines[1]).split(',')[1];
+  		if(parseFloat(y)) {
+			$("#confirmModal").modal("toggle");
+  		}
+  		else {
+  			alert("Invalid column data type");
+  		}
   	}
 
  //  	$scope.updateSelection = function(position, columns, user.col) {
