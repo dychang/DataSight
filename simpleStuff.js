@@ -4,7 +4,8 @@ var app = angular.module('DataAggApp', ["checklist-model"]);
 app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
-    	cols: []
+    	xcols: [],
+    	ycols: []
   	};
 
 	//Event Listeners
@@ -24,7 +25,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	//Handler for chart type selection buttons
 	$scope.chartTypeBtn = function(chartType) {
 		$scope.chartType = chartType;
-		$("#confirmModal").modal("toggle");
+		$("#xSelectModal").modal("toggle");
 	}
 
 	$scope.getColumns = function(file) {
@@ -44,8 +45,15 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	}
 
 	$scope.showSelected = function() {
-		console.log($scope.user.cols);
+		console.log($scope.user.xcols);
+		console.log($scope.user.ycols);
 	}
+
+	$scope.flushEverything = function() {
+    	$scope.user.xcols = [];
+    	$scope.user.ycols = [];
+    	$scope.fileColumns = [];
+  	}
 
 	$scope.run_Scatter = function() {
 
