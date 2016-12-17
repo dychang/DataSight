@@ -132,7 +132,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 			 var val1 = $scope.user.xcols[0];
 			 var val2 = $scope.user.ycols[0];
-			 var val3 = "NAME";
+			 var val3 = $scope.user.legendcol[0];
 
 			var margin = {top: 20, right: 20, bottom: 30, left: 40},
 			    width = 960 - margin.left - margin.right,
@@ -224,7 +224,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			          tooltip.transition()
 			               .duration(200)
 			               .style("opacity", .9);
-			          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
+			          tooltip.html(d[val3] + "<br/> (" + xValue(d) 
 			          + ", " + yValue(d) + ")")
 			               .style("left", (d3.event.pageX + 5) + "px")
 			               .style("top", (d3.event.pageY - 28) + "px");
