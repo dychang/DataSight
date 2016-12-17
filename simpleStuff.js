@@ -11,7 +11,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
     	xcols: [],
-		ycols: []
+		ycols: [],
+		legendcol: []
   	};
 
   	//Handler for Upload Button
@@ -70,7 +71,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.flushEverything = function() {
     	$scope.user.xcols = [];
     	$scope.user.ycols = [];
-    	$scope.user.legendvals = [];
+    	$scope.user.legendcol = [];
     	$scope.fileColumns = [];
   	}
 
@@ -80,6 +81,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
 
+    	$scope.user.ycols = [];
 		$("#ySelectModal").modal("toggle");
   	}
 
@@ -140,14 +142,14 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			    color = d3.scale.category20();
 
 			// add the graph canvas to the body of the webpage
-			var svg = d3.select("body").append("svg")
+			var svg = d3.select("#graph").append("svg")
 			    .attr("width", width + margin.left + margin.right)
 			    .attr("height", height + margin.top + margin.bottom)
 			  .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// add the tooltip area to the webpage
-			var tooltip = d3.select("body").append("div")
+			var tooltip = d3.select("#graph").append("div")
 			    .attr("class", "tooltip")
 			    .style("opacity", 0);
 
@@ -272,7 +274,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.sort(null)
 						.value(function(d) { return d[categoryValue]; });
 
-			var svg = d3.select("body").append("svg")
+			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
@@ -302,7 +304,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 				}
 			}
 
-
+	$("#visualModal").modal("toggle");
     }
 	
 }]);
