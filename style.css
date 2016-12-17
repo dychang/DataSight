@@ -87,14 +87,17 @@ h3 {
 }
 
 h5 {
-  
+   width: 450px;
+   white-space: nowrap;  
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
 .modal-dialog{
     overflow-y: initial;
 }
 .categories-box{
-    height: 450px;
+    height: 400px;
     overflow-y: auto;
 }
 

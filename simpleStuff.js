@@ -92,7 +92,11 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		});
 
     	$scope.user.legendcol = [];
-		$("#legendSelectModal").modal("toggle");
+		if (chartType == 'Scatter') {
+			$("#legendSelectModal").modal("toggle");
+		} else {
+			$("#ySelectModal").modal("toggle");
+		}
   	}
 
   	// Toggles confirm-select modal
@@ -105,6 +109,15 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	//       subscription.checked = false;
 	//   });
 	// }
+
+	// Confirm back button handler
+	$scope.confirmBackBtn = function() {
+		if (chartType == 'Scatter') {
+			$("#legendSelectModal").modal("toggle");
+		} else {
+			$("#ySelectModal").modal("toggle");
+		}
+	}
 
 	$scope.create_graph = function(chartType) {
 
