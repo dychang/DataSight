@@ -32,19 +32,15 @@
 </head>
 
 <body ng-app="DataAggApp">
-     <div>  
-          <h1 style = "text-align: center;">
-          Election Data Aggregator
-          </h1>
-
-          <h3>
-          Select a file to represent
-          </h3>
-     </div>
-
   <div class="container" ng-controller="DataImportCtrl">
-     <input type="file" id="input" value = "testFile2" ng-model="fileName" ng-init="">
-     <input type="submit" value="Upload" ng-click = "readFile(); flushEverything()" data-toggle="modal" data-target="#buttonModal">
+  <div align="center">
+    <img src="img/logo_transparent.png" class="img-fluid" alt="Responsive image">
+  </div>
+
+    <div>
+      <input type='file' id="input" ng-model="fileName" ng-init="" accept=".csv"/>
+      <button type="button" id='button' class="btn btn-success btn-lg btn-block btn-main round">Select A File To Visualize</button>
+    </div>  
 
     <div id="buttonModal" class="modal fade" role = "dialog">
         <div class="modal-dialog">
@@ -53,8 +49,8 @@
               <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
             </div>
             <div class="modal-body">
-              <h3>Chart Type</h3>
-              File: {{fileName}}
+              <h3 align="center">Chart Type</h3>
+              <h5>File: {{fileName}}</h5>
               <hr>
               <div class = "row">
                 <div class = "col-lg-12 col-md-12 col-sm-12">
@@ -92,11 +88,11 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body" >
-                <h3>Selected Columns</h3>
-                File: {{fileName}}
-                Chart Type: {{chartType}}
+                <h3 align="center">Select Category Columns</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
                 <hr>
-                <h5>Select x-columns to display:</h5>
+                <h5>Select category fields:</h5>
                 <div ng-repeat="col in fileColumns">
                   <input type="checkbox" checklist-model="user.xcols" checklist-value="col"> {{col}}
                 <br>
@@ -105,6 +101,7 @@
                 <div class="modal-footer">
                   <div>
                     <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#buttonModal">Back</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="xSelBtn()">Next</button>
                   </div>
                 </div>
@@ -120,12 +117,12 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body" >
-                <h3>Selected Columns</h3>
-                File: {{fileName}}
-                Chart Type: {{chartType}}
+                <h3 align="center">Selected Value Columns</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
                 <hr>
-                <h5>Select y-columns to display:</h5>
-                <div ng-repeat="col in fileColumns">
+                <h5>Select data fields:</h5>
+                <div ng-repeat="col in postFilteredCols">
                   <input type="checkbox" checklist-model="user.ycols" checklist-value="col"> {{col}}
                 <br>
                 </div>
@@ -133,6 +130,7 @@
                 <div class="modal-footer">
                   <div>
                     <br>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#xSelectModal">Back</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ySelBtn()">Next</button>
                   </div>
                 </div>
@@ -148,9 +146,9 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body" >
-                <h3>Confirm Screen</h3>
-                File: {{fileName}}
-                Chart Type: {{chartType}}
+                <h3 align="center">Confirm Screen</h3>
+                <h5>File: {{fileName}}</h5>
+                <h5>Chart Type: {{chartType}}</h5>
                 <hr>
                 <h5>Columns selected:</h5>
                 <div ng-repeat="col in user.xcols">
@@ -165,7 +163,8 @@
                 <div class="modal-footer">
                   <div>
                     <br>
-                    <button type="button" class="btn btn-default" data-dismiss = "modal" ng-click="create_graph(chartType)">Generate!</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#ySelectModal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="create_graph(chartType)">Generate Visual!</button>
                   </div>
                 </div>
               </div>

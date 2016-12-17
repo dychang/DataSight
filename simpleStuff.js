@@ -9,6 +9,21 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
     	ycols: []
   	};
 
+  	//Handler for Upload Button
+	$('#button').click(function(){
+	   $("input[type='file']").trigger('click');
+	})
+
+	//Handler for file selection - parses file selected
+	$("input[type='file']").change(function(){
+		$scope.flushEverything();
+		$scope.readFile();
+		$scope.fileName = $('#input').get(0).files[0].name;
+        $scope.$apply();
+		$("#buttonModal").modal("toggle");
+		
+	}) 
+
 	// FileReader listener
 	$scope.reader.onload = function(e) {
   		$scope.fileText = $scope.reader.result;
@@ -56,7 +71,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
   	// Removes user selected x-axis columns and toggles y-select modal
   	$scope.xSelBtn = function() {
-		$scope.fileColumns = $scope.fileColumns.filter(function(d) {
+		$scope.postFilteredCols = $scope.fileColumns.filter(function(d) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
 
