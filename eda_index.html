@@ -2,15 +2,14 @@
 
 <html>
   <head>
-    <script src='scripts/jquery.min.js'></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script src='jquery.min.js'></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <style type="text/css">
       div.bar {
         display: inline-block;
-        width: 20px;
-        height: 75px;   /* We'll override this later */
         background-color: teal;
+        margin-right: 2px;
       }
     </style>
   </head>
@@ -18,20 +17,68 @@
   <body>
     <p>Hello!</p>
     <script type="text/javascript">
-      var dataset = [5, 10, 15, 20];
-      d3.select("body").selectAll("div") // Why does this return from index 1???
+      var dataset = [5, 10, 15, 20, 1000, 200, 100, 80];
+      var names = ["first", "second", "third"];
+
+      // d3.csv("bar_data.csv", function(error, data) {
+
+      //   data.forEach(function(d) {
+      //       d.date = parseDate(d.date);
+      //       d.value = +d.value;
+      //   });
+
+      // x.domain(data.map(function(d) { return d.date; }));
+      // y.domain([0, d3.max(data, function(d) { return d.value; })]);
+      // d3.csv("data.csv", function(data) {
+      // });
+      dataset.sort(function(a, b) { return a - b; }); // sort from least to greatest
+        
+      d3.select("body").selectAll("div")
         .data(dataset)
         .enter()
+        .append("p")
         .append("div")
         .attr("class", "bar")
+        .style("height", "20px")
         .style("color", "red")
-        .style("height", function(d) {
+        .style("width", function(d) {
           return d + "px";
         });
-    
-    
-    
-    
+        
+      d3.select("body").append("p");
+        
+       var svgContainer = d3.select("body").append("svg")
+         .attr("width", 1200)
+         .attr("height", 100);
+        
+      var linear = d3.scale.linear()
+        .domain([0, d3.max(dataset)])
+        .range([2, 1000]);
+        
+      var discrete = d3.scale.ordinal()
+        .domain([d3.min(names), d3.max(names)])
+        .range([0, 100]);
+        
+
+      // var xAxis = d3.svg.axis(linear).ticks(7);
+      
+      // var yAxis = d3.axisLeft(discrete).ticks(d3.max(names));
+      
+      var xAxis = d3.svg.axis()
+        .scale(xAxis)
+        .orient("bottom")
+        .tickFormat(d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ"));
+
+      var yAxis = d3.svg.axis()
+        .scale(yAxis)
+        .orient("left")
+        .ticks(10);
+
+      var xAxisGroup = svgContainer.append("g")
+        .call(xAxis);
+      
+      var yAxisGroup = svgContainer.append("g")
+        .call(yAxis);
     </script>
     
     
