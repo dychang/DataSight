@@ -92,10 +92,10 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		});
 
     	$scope.user.legendcol = [];
-		if (chartType == 'Scatter') {
+		if ($scope.chartType == 'Bar') {
 			$("#legendSelectModal").modal("toggle");
 		} else {
-			$("#ySelectModal").modal("toggle");
+			$("#confirmModal").modal("toggle");
 		}
   	}
 
@@ -112,7 +112,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 	// Confirm back button handler
 	$scope.confirmBackBtn = function() {
-		if (chartType == 'Scatter') {
+		if ($scope.chartType == 'Bar') {
 			$("#legendSelectModal").modal("toggle");
 		} else {
 			$("#ySelectModal").modal("toggle");
