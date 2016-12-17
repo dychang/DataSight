@@ -11,7 +11,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
     	xcols: [],
-		ycols: []
+		ycols: [],
+		legendcol: []
   	};
 
   	//Handler for Upload Button
@@ -70,24 +71,34 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.flushEverything = function() {
     	$scope.user.xcols = [];
     	$scope.user.ycols = [];
-    	$scope.user.legendvals = [];
+    	$scope.user.legendcol = [];
     	$scope.fileColumns = [];
   	}
 
   	// Removes user selected x-axis columns and toggles y-select modal
   	$scope.xSelBtn = function() {
-		$scope.postFilteredCols = $scope.fileColumns.filter(function(d) {
+		$scope.dispYCols = $scope.fileColumns.filter(function(d) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
 
+    	$scope.user.ycols = [];
 		$("#ySelectModal").modal("toggle");
   	}
 
-  	// Toggles y-select modal
+  	// Toggles legend-select modal
   	$scope.ySelBtn = function() {
-		$("#confirmModal").modal("toggle");
+  		$scope.dispLegendCols = $scope.dispYCols.filter(function(d) {
+		  return $scope.user.ycols.indexOf(d) < 0;
+		});
+
+    	$scope.user.legendcol = [];
+		$("#legendSelectModal").modal("toggle");
   	}
 
+  	// Toggles confirm-select modal
+  	$scope.legendSelBtn = function() {
+		$("#confirmModal").modal("toggle");
+  	}
  //  	$scope.updateSelection = function(position, columns, user.col) {
 	//   angular.forEach(columns, function(subscription, index) {
 	//     if (position != index) 
@@ -140,14 +151,14 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			    color = d3.scale.category20();
 
 			// add the graph canvas to the body of the webpage
-			var svg = d3.select("body").append("svg")
+			var svg = d3.select("#graph").append("svg")
 			    .attr("width", width + margin.left + margin.right)
 			    .attr("height", height + margin.top + margin.bottom)
 			  .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// add the tooltip area to the webpage
-			var tooltip = d3.select("body").append("div")
+			var tooltip = d3.select("#graph").append("div")
 			    .attr("class", "tooltip")
 			    .style("opacity", 0);
 
@@ -343,7 +354,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.sort(null)
 						.value(function(d) { return d[categoryValue]; });
 
-			var svg = d3.select("body").append("svg")
+			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
@@ -372,6 +383,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 				return d;
 			}
 		}
+
+	$("#visualModal").modal("toggle");
     }
 	
 }]);
