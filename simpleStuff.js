@@ -87,10 +87,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
   		// TODO validate y col
   		// alert($scope.lines[1].split(',')[1]);
   		var y = String($scope.lines[1]).split(',')[1];
-  		if(parseFloat(y)) {
-			$("#confirmModal").modal("toggle");
-  		}
-  		else {
+  		if(!parseFloat(y)) {
+			
   			alert("Invalid column data type");
   		}
 
@@ -99,7 +97,13 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		});
 
     	$scope.user.legendcol = [];
-		$("#legendSelectModal").modal("toggle");
+    	
+  		if($scope.chartType.toUpperCase() == "SCATTER") {
+			$("#legendSelectModal").modal("toggle");
+		}
+		else {
+			$("#confirmModal").modal("toggle");
+		}
   	}
 
   	// Toggles confirm-select modal
