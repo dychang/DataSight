@@ -3,10 +3,6 @@
 
 var app = angular.module('DataAggApp', ["checklist-model"]);
 
-function makePie(){
-	
-};
-
 app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
