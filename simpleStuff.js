@@ -9,13 +9,13 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
     	ycols: []
   	};
 
-	//Event Listeners
+	// FileReader listener
 	$scope.reader.onload = function(e) {
   		$scope.fileText = $scope.reader.result;
 		$scope.getColumns($scope.fileText);
 	}
 
-	//Function Definitions
+	// Update button handler - begins file parsing
 	$scope.readFile = function() {
 		$scope.selectedFile = $('#input').get(0).files[0];
 		$scope.fileName = $scope.selectedFile.name;
@@ -23,12 +23,14 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		$scope.reader.readAsText($scope.selectedFile);
 	}
 
-	//Handler for chart type selection buttons
+	// Handler for chart type selection - updates global chartType var
+	// and toggles x-select modal
 	$scope.chartTypeBtn = function(chartType) {
 		$scope.chartType = chartType;
 		$("#xSelectModal").modal("toggle");
 	}
 
+	// Gets column names from file and stores in $scope.fileColumns
 	$scope.getColumns = function(file) {
         $scope.allTextLines = file.split(/\r\n|\n/);
         $scope.lines = [];
@@ -45,15 +47,25 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
      	$scope.fileColumns = $scope.lines[0].toString().split(',');
 	}
 
-	$scope.showSelected = function() {
-		console.log($scope.user.xcols);
-		console.log($scope.user.ycols);
-	}
-
+	// Flushes global structs relevant to column selection
 	$scope.flushEverything = function() {
     	$scope.user.xcols = [];
     	$scope.user.ycols = [];
     	$scope.fileColumns = [];
+  	}
+
+  	// Removes user selected x-axis columns and toggles y-select modal
+  	$scope.xSelBtn = function() {
+		$scope.fileColumns = $scope.fileColumns.filter(function(d) {
+		  return $scope.user.xcols.indexOf(d) < 0;
+		});
+
+		$("#ySelectModal").modal("toggle");
+  	}
+
+  	// Toggles y-select modal
+  	$scope.ySelBtn = function() {
+		$("#confirmModal").modal("toggle");
   	}
 
 	$scope.create_graph = function(chartType) {
