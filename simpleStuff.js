@@ -70,8 +70,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
      			console.log($scope.fileColumns[j] + ":" + line[j]);
      			$scope.data.push(parseFloat(line[j]));
      		}
-     			console.log(line[j]);
-     			$scope.data.push(parseInt(line[j]));
      	}
      		
      		//console.log(row);	
@@ -410,7 +408,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.attr("transform", temp);
 
 			var data = $scope.data;
-			//console.log(data);
+			console.log(data);
 			var g = svg.selectAll(".arc")
 						.data(pie($scope.data))
 						.enter().append("g")
