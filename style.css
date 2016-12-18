@@ -94,7 +94,11 @@ h5 {
     overflow-y: initial;
 }
 .categories-box{
+<<<<<<< HEAD
+    height: 200px;
+=======
     height: 300px;
+>>>>>>> origin/master
     overflow-y: auto;
 }
 

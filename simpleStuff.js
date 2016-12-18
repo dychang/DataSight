@@ -70,6 +70,11 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
      			console.log($scope.fileColumns[j] + ":" + line[j]);
      			$scope.data.push(parseFloat(line[j]));
      		}
+     			console.log(line[j]);
+     			$scope.data.push(parseInt(line[j]));
+     		}
+     		
+     		//console.log(row);	
      	}
 
      	console.log($scope.data);
@@ -353,6 +358,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
 			// var url = $scope.reader.readAsDataURL($scope.selectedFile);
+			
+			var url = $scope.reader.readAsDataURL($scope.selectedFile);
 			// console.log($scope.reader + url + $scope.selectedFile);
 
 			var fileName = $scope.fileName;
