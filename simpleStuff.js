@@ -61,12 +61,15 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
      	$scope.fileColumns = $scope.lines[0].toString().split(',');
      	$scope.data = [];
-     	for (var i = 0; i < $scope.allTextLines.length; i++) {
+     	for (var i = 1; i < $scope.allTextLines.length; i++) {
      		var line = $scope.allTextLines[i].split(',');
      		var row = {};
      		
      		for(var j = 1; j < line.length; j++) {
      			row[$scope.fileColumns[j]] = line[j];
+     			console.log($scope.fileColumns[j] + ":" + line[j]);
+     			$scope.data.push(parseFloat(line[j]));
+     		}
      			console.log(line[j]);
      			$scope.data.push(parseInt(line[j]));
      		}
@@ -283,70 +286,70 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
     			width = 600,
     			height = 300;
 
-		var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+			var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 
-		var y = d3.scale.linear().range([height, 0]);
+			var y = d3.scale.linear().range([height, 0]);
 
-		var xAxis = d3.svg.axis()
-		    .scale(x)
-		    .orient("bottom")
-		    .ticks(10);
+			var xAxis = d3.svg.axis()
+			    .scale(x)
+			    .orient("bottom")
+			    .ticks(10);
 
-		var yAxis = d3.svg.axis()
-		    .scale(y)
-		    .orient("left")
-		    .ticks(10);
+			var yAxis = d3.svg.axis()
+			    .scale(y)
+			    .orient("left")
+			    .ticks(10);
 
-		var svgCont = d3.select("body").append("svg")
-		    .attr("width", width + margin.left + margin.right)
-		    .attr("height", height + margin.top + margin.bottom)
-		  .append("g")
-		    .attr("transform", 
-		          "translate(" + margin.left + "," + margin.top + ")");
+			var svgCont = d3.select("body").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			  .append("g")
+			    .attr("transform", 
+			          "translate(" + margin.left + "," + margin.top + ")");
 
-		d3.csv("bar_data.csv", function(error, data) {
+			d3.csv("bar_data.csv", function(error, data) {
 
-		    data.forEach(function(d) {
-		        // d.date = parseDate(d.date);
-		        d.value = +d.value;
-		    });
+			    data.forEach(function(d) {
+			        // d.date = parseDate(d.date);
+			        d.value = +d.value;
+			    });
 		  
-		  x.domain(data.map(function(d) { return d[val1]; }));
-		  y.domain([0, d3.max(data, function(d) { return d[val2]; })]);
+		  		x.domain(data.map(function(d) { return d[val1]; }));
+		  		y.domain([0, d3.max(data, function(d) { return d[val2]; })]);
 
-		  svgCont.append("g")
-		      .attr("class", "x axis")
-		      .attr("transform", "translate(0," + height + ")")
-		      .call(xAxis)
-		    .selectAll("text")
-		      .style("text-anchor", "end")
-		      .attr("dx", "-.8em")
-		      .attr("dy", "-.55em")
-		      .attr("transform", "rotate(-90)" )
-		      // .text(val1)
-		      ;
+				svgCont.append("g")
+			      	.attr("class", "x axis")
+			      	.attr("transform", "translate(0," + height + ")")
+			      	.call(xAxis)
+			      	.selectAll("text")
+			      	.style("text-anchor", "end")
+			      	.attr("dx", "-.8em")
+			      	.attr("dy", "-.55em")
+			      	.attr("transform", "rotate(-90)" )
+			      	// .text(val1)
+			      	;
 
-		  svgCont.append("g")
-		      .attr("class", "y axis")
-		      .call(yAxis)
-		    .append("text")
-		      .attr("transform", "rotate(-90)")
-		      .attr("y", 6)
-		      .attr("dy", ".71em")
-		      .style("text-anchor", "end")
-		      // .text(val2)
-		      ;
+				svgCont.append("g")
+				    .attr("class", "y axis")
+				    .call(yAxis)
+				    .append("text")
+				    .attr("transform", "rotate(-90)")
+				    .attr("y", 6)
+				    .attr("dy", ".71em")
+				    .style("text-anchor", "end")
+				    // .text(val2)
+				    ;
 
-		  svgCont.selectAll("bar")
-		      .data(data)
-		    .enter().append("rect")
-		      .style("fill", "teal")
-		      .attr("x", function(d) { return x([d[val1]]); })
-		      .attr("width", x.rangeBand())
-		      .attr("y", function(d) { return y(d[val2]); })
-		      .attr("height", function(d) { return height - y(d[val2]); });
+		  		svgCont.selectAll("bar")
+		      		.data(data)
+		    		.enter().append("rect")
+		      		.style("fill", "teal")
+		      		.attr("x", function(d) { return x([d[val1]]); })
+		      		.attr("width", x.rangeBand())
+		      		.attr("y", function(d) { return y(d[val2]); })
+		      		.attr("height", function(d) { return height - y(d[val2]); });
 
-});
+			});
 		}
 
 		else if (chartType == 'Pie') {
@@ -354,6 +357,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var fileName = 'pie_data.csv'
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
+			// var url = $scope.reader.readAsDataURL($scope.selectedFile);
 			
 			var url = $scope.reader.readAsDataURL($scope.selectedFile);
 			// console.log($scope.reader + url + $scope.selectedFile);
@@ -371,6 +375,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			var color = d3.scale.ordinal()
 							.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
+			var colorIndex = 1;
+
 			var arc = d3.svg.arc()
 						.outerRadius(radius - 10)
 						.innerRadius(0);
@@ -381,37 +387,33 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 			var pie = d3.layout.pie()
 						.sort(null)
-						.value(function(d) { return d[categoryValue]; });
+						.value(function(d) { return d; });
 
+			var temp = "translate(" + width / 2 + "," + height / 2 + ")";
+			console.log(temp);
 			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
-						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+						.attr("transform", temp);
 
-			d3.csv(fileName, type, function(error, data) {
-				if (error) throw error;
+			var data = $scope.data;
+			//console.log(data);
+			var g = svg.selectAll(".arc")
+						.data(pie($scope.data))
+						.enter().append("g")
+						.attr("class", "arc");
 
-				// console.log(data);
-				var g = svg.selectAll(".arc")
-							.data(pie(data))
-							.enter().append("g")
-							.attr("class", "arc");
+			g.append("path")
+				.attr("d", arc)
+				.style("fill", function(d) { console.log('We are in fill. What is d? ', d); return color(colorIndex++); });
 
-				g.append("path")
-					.attr("d", arc)
-					.style("fill", function(d) { return color(d.data[categoryName]); });
+			g.append("text")
+				.attr("transform", function(d) { console.log('Again, what is d?', d.data); return "translate(" + labelArc.centroid(d.data) + ")"; })
+				.attr("dy", ".35em")
+				.text(function(d) { console.log('in text. what is d? ', d); return d.data[categoryName]; });
+			
 
-				g.append("text")
-					.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-					.attr("dy", ".35em")
-					.text(function(d) { return d.data[categoryName]; });
-				});
-
-			function type(d) {
-				d[categoryValue] = +d[categoryValue];
-				return d;
-			}
 		}
 
 	$("#visualModal").modal("toggle");
