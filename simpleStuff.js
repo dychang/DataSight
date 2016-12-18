@@ -3,10 +3,6 @@
 
 var app = angular.module('DataAggApp', ["checklist-model"]);
 
-function makePie(){
-	
-};
-
 app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 	$scope.reader = new FileReader();  
 	$scope.user = {
@@ -56,7 +52,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
         $scope.lines = [];
         for (var i=0; i<$scope.allTextLines.length; i++) {
             var data = $scope.allTextLines[i].split(';');
-
             var tarr = [];
             for (var j=0; j<data.length; j++) {
                 tarr.push(data[j]);
@@ -65,7 +60,22 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
         }
 
      	$scope.fileColumns = $scope.lines[0].toString().split(',');
-	}
+     	$scope.data = [];
+     	for (var i = 1; i < $scope.allTextLines.length; i++) {
+     		var line = $scope.allTextLines[i].split(',');
+     		var row = {};
+     		
+     		for(var j = 1; j < line.length; j++) {
+     			row[$scope.fileColumns[j]] = line[j];
+     			console.log($scope.fileColumns[j] + ":" + line[j]);
+     			$scope.data.push(parseFloat(line[j]));
+     		}
+     			console.log(line[j]);
+     			$scope.data.push(parseInt(line[j]));
+     	}
+     		
+     		//console.log(row);	
+     }
 
 	// Flushes global structs relevant to column selection
 	$scope.flushEverything = function() {
@@ -82,7 +92,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 		$scope.dispYCols = $scope.fileColumns.filter(function(d) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
-
+		// TODO validate x col
     	$scope.user.ycols = [];
     	$(".yRadio").prop("checked", false);
     	$(".yRadio").closest("label").removeClass("active");
@@ -93,6 +103,14 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
   	$scope.ySelBtn = function() {
   		$scope.user.ycols[0] = $("input[name=ysel]:checked").val();
 
+  		// TODO validate y col
+  		// alert($scope.lines[1].split(',')[1]);
+  		var y = String($scope.lines[1]).split(',')[1];
+  		if(!parseFloat(y)) {
+			
+  			alert("Invalid column data type");
+  		}
+
   		$scope.dispLegendCols = $scope.dispYCols.filter(function(d) {
 		  return $scope.user.ycols.indexOf(d) < 0;
 		});
@@ -100,7 +118,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
     	$scope.user.legendcol = [];
     	$(".legendRadio").prop("checked", false);
     	$(".legendRadio").closest("label").removeClass("active");
-		if ($scope.chartType == 'Scatter') {
+		if ($scope.chartType.toUpperCase() == "SCATTER") {
 			$("#legendSelectModal").modal("toggle");
 		} else {
 			$("#confirmModal").modal("toggle");
@@ -121,7 +139,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 	// Confirm back button handler
 	$scope.confirmBackBtn = function() {
-		if ($scope.chartType == 'Scatter') {
+		if ($scope.chartType.toUpperCase() == "SCATTER") {
 			$("#legendSelectModal").modal("toggle");
 		} else {
 			$("#ySelectModal").modal("toggle");
@@ -235,7 +253,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			          tooltip.transition()
 			               .duration(200)
 			               .style("opacity", .9);
-			          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
+			          tooltip.html(d[val3] + "<br/> (" + xValue(d) 
 			          + ", " + yValue(d) + ")")
 			               .style("left", (d3.event.pageX + 5) + "px")
 			               .style("top", (d3.event.pageY - 28) + "px");
@@ -273,6 +291,77 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 		else if (chartType == 'Bar') {
 
+			var val1 = $scope.user.xcols[0];
+			var val2 = $scope.user.ycols[0];
+
+			var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    			width = 600,
+    			height = 300;
+
+			var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+			var y = d3.scale.linear().range([height, 0]);
+
+			var xAxis = d3.svg.axis()
+			    .scale(x)
+			    .orient("bottom")
+			    .ticks(10);
+
+			var yAxis = d3.svg.axis()
+			    .scale(y)
+			    .orient("left")
+			    .ticks(10);
+
+			var svgCont = d3.select("#graph").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			  .append("g")
+			    .attr("transform", 
+			          "translate(" + margin.left + "," + margin.top + ")");
+
+			d3.csv("bar_data.csv", function(error, data) {
+
+			    data.forEach(function(d) {
+			        // d.date = parseDate(d.date);
+			        d.value = +d.value;
+			    });
+		  
+		  		x.domain(data.map(function(d) { return d[val1]; }));
+		  		y.domain([0, d3.max(data, function(d) { return d[val2]; })]);
+
+				svgCont.append("g")
+			      	.attr("class", "x axis")
+			      	.attr("transform", "translate(0," + height + ")")
+			      	.call(xAxis)
+			      	.selectAll("text")
+			      	.style("text-anchor", "end")
+			      	.attr("dx", "-.8em")
+			      	.attr("dy", "-.55em")
+			      	.attr("transform", "rotate(-90)" )
+			      	// .text(val1)
+			      	;
+
+				svgCont.append("g")
+				    .attr("class", "y axis")
+				    .call(yAxis)
+				    .append("text")
+				    .attr("transform", "rotate(-90)")
+				    .attr("y", 6)
+				    .attr("dy", ".71em")
+				    .style("text-anchor", "end")
+				    // .text(val2)
+				    ;
+
+		  		svgCont.selectAll("bar")
+		      		.data(data)
+		    		.enter().append("rect")
+		      		.style("fill", "teal")
+		      		.attr("x", function(d) { return x([d[val1]]); })
+		      		.attr("width", x.rangeBand())
+		      		.attr("y", function(d) { return y(d[val2]); })
+		      		.attr("height", function(d) { return height - y(d[val2]); });
+
+			});
 		}
 
 		else if (chartType == 'Pie') {
@@ -280,6 +369,11 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var fileName = 'pie_data.csv'
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
+			// var url = $scope.reader.readAsDataURL($scope.selectedFile);
+			
+			var url = $scope.reader.readAsDataURL($scope.selectedFile);
+			// console.log($scope.reader + url + $scope.selectedFile);
+
 			var fileName = $scope.fileName;
 
 			var param = $scope.user;
@@ -293,6 +387,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			var color = d3.scale.ordinal()
 							.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
+			var colorIndex = 1;
+
 			var arc = d3.svg.arc()
 						.outerRadius(radius - 10)
 						.innerRadius(0);
@@ -303,37 +399,34 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 			var pie = d3.layout.pie()
 						.sort(null)
-						.value(function(d) { return d[categoryValue]; });
+						.value(function(d) { return d; });
 
+			var temp = "translate(" + width / 2 + "," + height / 2 + ")";
+			console.log(temp);
 			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
-						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+						.attr("transform", temp);
 
-			d3.csv(fileName, type, function(error, data) {
-				if (error) throw error;
+			var data = $scope.data;
+			//console.log(data);
+			var g = svg.selectAll(".arc")
+						.data(pie($scope.data))
+						.enter().append("g")
+						.attr("class", "arc");
 
-				var g = svg.selectAll(".arc")
-							.data(pie(data))
-							.enter().append("g")
-							.attr("class", "arc");
+			g.append("path")
+				.attr("d", arc)
+				.style("fill", function(d) { console.log('We are in fill. What is d? ', d); return color(colorIndex++); });
 
-				g.append("path")
-					.attr("d", arc)
-					.style("fill", function(d) { return color(d.data[categoryName]); });
+			g.append("text")
+				.attr("transform", function(d) { console.log('Again, what is d?', d.data); return "translate(" + labelArc.centroid(d.data) + ")"; })
+				.attr("dy", ".35em")
+				.text(function(d) { console.log('in text. what is d? ', d); return d.data[categoryName]; });
+			
 
-				g.append("text")
-					.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-					.attr("dy", ".35em")
-					.text(function(d) { return d.data[categoryName]; });
-				});
-
-				function type(d) {
-					d[categoryValue] = +d[categoryValue];
-					return d;
-				}
-			}
+		}
 
 	$("#visualModal").modal("toggle");
     }
