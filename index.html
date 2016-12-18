@@ -50,7 +50,8 @@
             </div>
             <div class="modal-body">
               <h3 align="center">Select Chart Type</h3>
-              <h5>File: {{fileName}}</h5>
+              <h5>File:</h5>
+              <h5>{{fileName}}</h5>
               <hr>
               <div class = "row">
                 <div class="col-lg-12 col-md-12 col-sm-12" align="center">
@@ -79,15 +80,19 @@
                 </div>
                 <div class="modal-body">
                   <h3 align="center">Select Category Column</h3>
-                  <h5>File: {{fileName}}</h5>
+                  <h5>File:</h5>
+                  <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
                   <hr>
                   <div class="categories-box">
-                    <h5>Select category field:</h5>
-                    <div ng-repeat="col in fileColumns">
-                      <input type="checkbox" checklist-model="user.xcols" checklist-value="col"> {{col}}
-                      <br>
+                    <h5>Select a category field:</h5>
+
+                    <div class="btn-group btn-group-vertical btn-group-xs" data-toggle="buttons">
+                      <label class="btn btn-info" ng-repeat="col in fileColumns">
+                        <input type="radio" name="xsel" value="{{col}}" autocomplete="off" class="xRadio">{{col}}
+                      </label>
                     </div>
+
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -110,15 +115,19 @@
                 </div>
                 <div class="modal-body">
                   <h3 align="center">Selected Value Column</h3>
-                  <h5>File: {{fileName}}</h5>
+                  <h5>File:</h5>
+                  <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
                   <hr>
                   <div class="categories-box">
-                    <h5>Select data field:</h5>
-                    <div ng-repeat="col in dispYCols">
-                      <input type="checkbox" checklist-model="user.ycols" checklist-value="col"> {{col}}
-                    <br>
-                  </div>
+                    <h5>Select a data field:</h5>
+
+                    <div class="btn-group btn-group-vertical btn-group-xs" data-toggle="buttons">
+                      <label class="btn btn-info" ng-repeat="col in dispYCols">
+                        <input type="radio" name="ysel" value="{{col}}" autocomplete="off" class="yRadio">{{col}}
+                      </label>
+                    </div>
+
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -141,15 +150,19 @@
                 </div>
                 <div class="modal-body">
                   <h3 align="center">Selected Legend Column</h3>
-                  <h5>File: {{fileName}}</h5>
+                  <h5>File:</h5>
+                  <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
                   <hr>
                   <div class="categories-box">
-                    <h5>Select data field:</h5>
-                    <div ng-repeat="col in dispLegendCols">
-                      <input type="checkbox" checklist-model="user.legendcol" checklist-value="col"> {{col}}
-                    <br>
-                  </div>
+                    <h5>Select a legend field:</h5>
+
+                    <div class="btn-group btn-group-vertical btn-group-xs" data-toggle="buttons">
+                      <label class="btn btn-info" ng-repeat="col in dispLegendCols">
+                        <input type="radio" name="legendsel" value="{{col}}" autocomplete="off" class="legendRadio">{{col}}
+                      </label>
+                    </div>
+
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -172,7 +185,8 @@
                 </div>
                 <div class="modal-body" >
                   <h3 align="center">Confirm</h3>
-                  <h5>File: {{fileName}}</h5>
+                  <h5>File:</h5>
+                  <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
                   <hr>
                   <h5>Columns selected:</h5>

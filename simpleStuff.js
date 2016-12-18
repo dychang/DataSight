@@ -77,21 +77,29 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
   	// Removes user selected x-axis columns and toggles y-select modal
   	$scope.xSelBtn = function() {
+  		$scope.user.xcols[0] = $("input[name=xsel]:checked").val();
+
 		$scope.dispYCols = $scope.fileColumns.filter(function(d) {
 		  return $scope.user.xcols.indexOf(d) < 0;
 		});
 
     	$scope.user.ycols = [];
+    	$(".yRadio").prop("checked", false);
+    	$(".yRadio").closest("label").removeClass("active");
 		$("#ySelectModal").modal("toggle");
   	}
 
   	// Toggles legend-select modal
   	$scope.ySelBtn = function() {
+  		$scope.user.ycols[0] = $("input[name=ysel]:checked").val();
+
   		$scope.dispLegendCols = $scope.dispYCols.filter(function(d) {
 		  return $scope.user.ycols.indexOf(d) < 0;
 		});
 
     	$scope.user.legendcol = [];
+    	$(".legendRadio").prop("checked", false);
+    	$(".legendRadio").closest("label").removeClass("active");
 		if ($scope.chartType == 'Bar') {
 			$("#legendSelectModal").modal("toggle");
 		} else {
@@ -101,6 +109,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
   	// Toggles confirm-select modal
   	$scope.legendSelBtn = function() {
+  		$scope.user.legendcol[0] = $("input[name=legendsel]:checked").val();
 		$("#confirmModal").modal("toggle");
   	}
  //  	$scope.updateSelection = function(position, columns, user.col) {
