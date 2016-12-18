@@ -70,6 +70,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
      			console.log($scope.fileColumns[j] + ":" + line[j]);
      			$scope.data.push(parseFloat(line[j]));
      		}
+     			console.log(line[j]);
+     			$scope.data.push(parseInt(line[j]));
      	}
      		
      		//console.log(row);	
@@ -399,24 +401,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
-						.attr("transform", temp);
-
-			var data = $scope.data;
-			console.log(data);
-			var g = svg.selectAll(".arc")
-						.data(pie($scope.data))
-						.enter().append("g")
-						.attr("class", "arc");
-
-			g.append("path")
-				.attr("d", arc)
-				.style("fill", function(d) { console.log('We are in fill. What is d? ', d); return color(colorIndex++); });
-
-			g.append("text")
-				.attr("transform", function(d) { console.log('Again, what is d?', d.data); return "translate(" + labelArc.centroid(d.data) + ")"; })
-				.attr("dy", ".35em")
-				.text(function(d) { console.log('in text. what is d? ', d); return d.data[categoryName]; })
-				.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 			d3.csv(fileName, type, function(error, data) {
 				if (error) throw error;
