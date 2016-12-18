@@ -369,8 +369,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			// var fileName = 'pie_data.csv'
 			// var categoryName = 'age';
 			// var categoryValue = 'population';
-			// var url = $scope.reader.readAsDataURL($scope.selectedFile);
-			
 			var url = $scope.reader.readAsDataURL($scope.selectedFile);
 			// console.log($scope.reader + url + $scope.selectedFile);
 
@@ -387,8 +385,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			var color = d3.scale.ordinal()
 							.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-			var colorIndex = 1;
-
 			var arc = d3.svg.arc()
 						.outerRadius(radius - 10)
 						.innerRadius(0);
@@ -399,33 +395,37 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 			var pie = d3.layout.pie()
 						.sort(null)
-						.value(function(d) { return d; });
+						.value(function(d) { return d[categoryValue]; });
 
-			var temp = "translate(" + width / 2 + "," + height / 2 + ")";
-			console.log(temp);
 			var svg = d3.select("#graph").append("svg")
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
-						.attr("transform", temp);
+						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-			var data = $scope.data;
-			//console.log(data);
-			var g = svg.selectAll(".arc")
-						.data(pie($scope.data))
-						.enter().append("g")
-						.attr("class", "arc");
+			d3.csv(fileName, type, function(error, data) {
+				if (error) throw error;
 
-			g.append("path")
-				.attr("d", arc)
-				.style("fill", function(d) { console.log('We are in fill. What is d? ', d); return color(colorIndex++); });
+				// console.log(data);
+				var g = svg.selectAll(".arc")
+							.data(pie(data))
+							.enter().append("g")
+							.attr("class", "arc");
 
-			g.append("text")
-				.attr("transform", function(d) { console.log('Again, what is d?', d.data); return "translate(" + labelArc.centroid(d.data) + ")"; })
-				.attr("dy", ".35em")
-				.text(function(d) { console.log('in text. what is d? ', d); return d.data[categoryName]; });
-			
+				g.append("path")
+					.attr("d", arc)
+					.style("fill", function(d) { return color(d.data[categoryName]); });
 
+				g.append("text")
+					.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+					.attr("dy", ".35em")
+					.text(function(d) { return d.data[categoryName]; });
+				});
+
+			function type(d) {
+				d[categoryValue] = +d[categoryValue];
+				return d;
+			}
 		}
 
 	$("#visualModal").modal("toggle");
