@@ -319,7 +319,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			    .attr("transform", 
 			          "translate(" + margin.left + "," + margin.top + ")");
 
-			d3.csv("bar_data.csv", function(error, data) {
+			d3.csv($scope.fileName, function(error, data) {
 
 			    data.forEach(function(d) {
 			        // d.date = parseDate(d.date);
