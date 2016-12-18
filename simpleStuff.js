@@ -399,7 +399,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 						.attr("width", width)
 						.attr("height", height)
 						.append("g")
-<<<<<<< HEAD
 						.attr("transform", temp);
 
 			var data = $scope.data;
@@ -416,11 +415,8 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 			g.append("text")
 				.attr("transform", function(d) { console.log('Again, what is d?', d.data); return "translate(" + labelArc.centroid(d.data) + ")"; })
 				.attr("dy", ".35em")
-				.text(function(d) { console.log('in text. what is d? ', d); return d.data[categoryName]; });
-			
-
-=======
-						.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+				.text(function(d) { console.log('in text. what is d? ', d); return d.data[categoryName]; })
+				.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 			d3.csv(fileName, type, function(error, data) {
 				if (error) throw error;
@@ -445,7 +441,6 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 				d[categoryValue] = +d[categoryValue];
 				return d;
 			}
->>>>>>> origin/master
 		}
 
 	$("#visualModal").modal("toggle");
