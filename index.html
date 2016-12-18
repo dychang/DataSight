@@ -21,6 +21,9 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+  <!-- Minified Font Awesome -->
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+
   <!-- Checklist Model -->
   <script src="Checklist-model.js"></script>
 
@@ -49,7 +52,7 @@
               <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
             </div>
             <div class="modal-body">
-              <h3 align="center">Select Chart Type</h3>
+              <h3 align="center">Chart Type</h3>
               <h5>File:</h5>
               <h5>{{fileName}}</h5>
               <hr>
@@ -79,7 +82,7 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body">
-                  <h3 align="center">Select Category Column</h3>
+                  <h3 align="center">Category Column</h3>
                   <h5>File:</h5>
                   <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
@@ -87,10 +90,9 @@
                   <div class="categories-box">
                     <h5>Select a category field:</h5>
 
-                    <div class="btn-group btn-group-vertical btn-group-xs" data-toggle="buttons">
-                      <label class="btn btn-info" ng-repeat="col in fileColumns">
-                        <input type="radio" name="xsel" value="{{col}}" autocomplete="off" class="xRadio">{{col}}
-                      </label>
+                    <div class="radio radio-info" ng-repeat="col in fileColumns">
+                      <input type="radio" name="xsel" value="{{col}}" autocomplete="off" class="xRadio">
+                      <label>{{col}}</label>
                     </div>
 
                   </div>
@@ -114,7 +116,7 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body">
-                  <h3 align="center">Selected Value Column</h3>
+                  <h3 align="center">Value Column</h3>
                   <h5>File:</h5>
                   <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
@@ -122,10 +124,9 @@
                   <div class="categories-box">
                     <h5>Select a data field:</h5>
 
-                    <div class="btn-group btn-group-vertical btn-group-xs" data-toggle="buttons">
-                      <label class="btn btn-info" ng-repeat="col in dispYCols">
-                        <input type="radio" name="ysel" value="{{col}}" autocomplete="off" class="yRadio">{{col}}
-                      </label>
+                    <div class="radio radio-info" ng-repeat="col in dispYCols">
+                      <input type="radio" name="ysel" value="{{col}}" autocomplete="off" class="yRadio">
+                      <label>{{col}}</label>
                     </div>
 
                   </div>
@@ -149,7 +150,7 @@
                   <button type="button" class="close" data-dismiss = "modal">&times;</button><!-- close icon-->
                 </div>
                 <div class="modal-body">
-                  <h3 align="center">Selected Legend Column</h3>
+                  <h3 align="center">Legend Column</h3>
                   <h5>File:</h5>
                   <h5>{{fileName}}</h5>
                   <h5>Chart Type: {{chartType}}</h5>
@@ -157,10 +158,9 @@
                   <div class="categories-box">
                     <h5>Select a legend field:</h5>
 
-                    <div class="btn-group btn-group-vertical btn-group-xs" data-toggle="buttons">
-                      <label class="btn btn-info" ng-repeat="col in dispLegendCols">
-                        <input type="radio" name="legendsel" value="{{col}}" autocomplete="off" class="legendRadio">{{col}}
-                      </label>
+                    <div class="radio radio-info" ng-repeat="col in dispLegendCols">
+                      <input type="radio" name="legendsel" value="{{col}}" autocomplete="off" class="legendRadio">
+                      <label>{{col}}</label>
                     </div>
 
                   </div>

@@ -100,7 +100,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
     	$scope.user.legendcol = [];
     	$(".legendRadio").prop("checked", false);
     	$(".legendRadio").closest("label").removeClass("active");
-		if ($scope.chartType == 'Bar') {
+		if ($scope.chartType == 'Scatter') {
 			$("#legendSelectModal").modal("toggle");
 		} else {
 			$("#confirmModal").modal("toggle");
@@ -121,7 +121,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 	// Confirm back button handler
 	$scope.confirmBackBtn = function() {
-		if ($scope.chartType == 'Bar') {
+		if ($scope.chartType == 'Scatter') {
 			$("#legendSelectModal").modal("toggle");
 		} else {
 			$("#ySelectModal").modal("toggle");
@@ -143,7 +143,7 @@ app.controller('DataImportCtrl',[ '$scope', '$http', function($scope, $http) {
 
 			 var val1 = $scope.user.xcols[0];
 			 var val2 = $scope.user.ycols[0];
-			 var val3 = "NAME";
+			 var val3 = $scope.user.legendcol[0];
 
 			var margin = {top: 20, right: 20, bottom: 30, left: 40},
 			    width = 960 - margin.left - margin.right,
